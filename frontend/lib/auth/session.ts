@@ -1,18 +1,24 @@
 /**
- * The KanMind backend authenticates with a DRF token that the client has to
+ * The Coderr backend authenticates with a DRF token that the client has to
  * send on every request, so the token lives in localStorage. That makes it
  * readable by any script on the page - acceptable for this project, but not a
  * pattern to copy into an app that can use httpOnly cookies instead.
+ *
+ * The profile type is stored next to it because almost every screen branches
+ * on it, and the auth endpoints do not return it.
  */
 
-const STORAGE_KEY = "kanmind.session"
-const SESSION_CHANGED_EVENT = "kanmind:session-changed"
+import type { ProfileType } from "@/lib/api/types"
+
+const STORAGE_KEY = "coderr.session"
+const SESSION_CHANGED_EVENT = "coderr:session-changed"
 
 export type Session = {
   token: string
   userId: number
+  username: string
   email: string
-  fullname: string
+  type: ProfileType
 }
 
 function isSession(value: unknown): value is Session {
@@ -23,8 +29,9 @@ function isSession(value: unknown): value is Session {
   return (
     typeof candidate.token === "string" &&
     typeof candidate.userId === "number" &&
+    typeof candidate.username === "string" &&
     typeof candidate.email === "string" &&
-    typeof candidate.fullname === "string"
+    (candidate.type === "customer" || candidate.type === "business")
   )
 }
 

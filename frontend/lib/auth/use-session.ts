@@ -35,8 +35,26 @@ export function useSession(): Session | null {
   return useSyncExternalStore(subscribeToSession, getSnapshot, getServerSnapshot)
 }
 
-export function getInitials(fullname: string): string {
-  const parts = fullname.trim().split(/\s+/).filter(Boolean)
+export function useIsBusiness(): boolean {
+  return useSession()?.type === "business"
+}
+
+export function useIsCustomer(): boolean {
+  return useSession()?.type === "customer"
+}
+
+/** Falls back to the username when the profile carries no real name. */
+export function displayName(
+  firstName: string,
+  lastName: string,
+  username: string
+): string {
+  const full = `${firstName} ${lastName}`.trim()
+  return full || username
+}
+
+export function getInitials(name: string): string {
+  const parts = name.trim().split(/\s+/).filter(Boolean)
   if (parts.length === 0) {
     return "?"
   }

@@ -1,17 +1,18 @@
 import { request } from "@/lib/api/client"
-import { authResponseSchema, userShortSchema } from "@/lib/api/types"
-import type { AuthResponse, UserShort } from "@/lib/api/types"
+import { authResponseSchema } from "@/lib/api/types"
+import type { AuthResponse, ProfileType } from "@/lib/api/types"
 
 export type LoginPayload = {
-  email: string
+  username: string
   password: string
 }
 
 export type RegistrationPayload = {
-  fullname: string
+  username: string
   email: string
   password: string
   repeated_password: string
+  type: ProfileType
 }
 
 export function login(payload: LoginPayload): Promise<AuthResponse> {
@@ -28,12 +29,4 @@ export function register(payload: RegistrationPayload): Promise<AuthResponse> {
     body: payload,
     anonymous: true,
   })
-}
-
-/** Resolves the user behind an e-mail address, or null when it is unknown. */
-export function checkEmail(email: string): Promise<UserShort> {
-  return request(
-    `/email-check/?email=${encodeURIComponent(email)}`,
-    userShortSchema
-  )
 }
