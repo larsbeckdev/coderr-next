@@ -6,15 +6,7 @@
 
 @theme inline {
     --font-heading: var(--font-sans);
-    --font-sans: var(--font-mulish);
-    --color-sidebar-ring: var(--sidebar-ring);
-    --color-sidebar-border: var(--sidebar-border);
-    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-    --color-sidebar-accent: var(--sidebar-accent);
-    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-    --color-sidebar-primary: var(--sidebar-primary);
-    --color-sidebar-foreground: var(--sidebar-foreground);
-    --color-sidebar: var(--sidebar);
+    --font-sans: var(--font-dm-sans);
     --color-chart-5: var(--chart-5);
     --color-chart-4: var(--chart-4);
     --color-chart-3: var(--chart-3);
@@ -40,14 +32,13 @@
     --color-background: var(--background);
     --color-surface-sunken: var(--surface-sunken);
     --color-brand: var(--brand);
+    --color-brand-strong: var(--brand-strong);
     --color-brand-soft: var(--brand-soft);
-    --color-priority-high: var(--priority-high);
-    --color-priority-medium: var(--priority-medium);
-    --color-priority-low: var(--priority-low);
-    --color-status-to-do: var(--status-to-do);
+    --color-brand-soft-foreground: var(--brand-soft-foreground);
+    --color-rating: var(--rating);
     --color-status-in-progress: var(--status-in-progress);
-    --color-status-review: var(--status-review);
-    --color-status-done: var(--status-done);
+    --color-status-completed: var(--status-completed);
+    --color-status-cancelled: var(--status-cancelled);
     --radius-sm: calc(var(--radius) * 0.6);
     --radius-md: calc(var(--radius) * 0.8);
     --radius-lg: var(--radius);
@@ -57,53 +48,80 @@
     --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-/* KanMind is a dark-only brand. The same token set is declared on :root and
-   on .dark so that the `dark:` variants baked into the shadcn components
-   resolve, no matter how the theme class ends up on <html>. */
-:root,
-.dark {
-    --background: oklch(0.2714 0.0371 260.01); /* #1C2739 */
-    --foreground: oklch(0.9461 0 89.88); /* #EDEDED */
-    --surface-sunken: oklch(0.2427 0.0294 261.37); /* #18202E */
-    --card: oklch(0.3084 0.0497 260.27); /* #213049 */
-    --card-foreground: oklch(0.9461 0 89.88);
-    --popover: oklch(0.3084 0.0497 260.27);
-    --popover-foreground: oklch(0.9461 0 89.88);
-    --primary: oklch(0.8652 0.1768 90.38); /* #FFCC00 */
-    --primary-foreground: oklch(0.2714 0.0371 260.01);
-    --secondary: oklch(0.3084 0.0497 260.27);
-    --secondary-foreground: oklch(0.9461 0 89.88);
-    --muted: oklch(0.2427 0.0294 261.37);
-    --muted-foreground: oklch(0.7 0.0333 260);
-    --accent: oklch(0.4017 0.0762 259.88); /* #2F4871 */
-    --accent-foreground: oklch(0.9461 0 89.88);
-    --destructive: oklch(0.6281 0.2575 29.01); /* #FF0004 */
-    --border: oklch(0.4017 0.0762 259.88);
-    --input: oklch(0.4017 0.0762 259.88);
-    --ring: oklch(0.9276 0.1193 95.72); /* #FFE787 */
-    --brand: oklch(0.8652 0.1768 90.38);
-    --brand-soft: oklch(0.9276 0.1193 95.72);
-    --priority-high: oklch(0.6281 0.2575 29.01);
-    --priority-medium: oklch(0.6667 0.2243 36.78); /* #FF4C00 */
-    --priority-low: oklch(0.5807 0.2305 259.47); /* #006FFF */
-    --status-to-do: oklch(0.7 0.0333 260);
-    --status-in-progress: oklch(0.5807 0.2305 259.47);
-    --status-review: oklch(0.6667 0.2243 36.78);
-    --status-done: oklch(0.7193 0.1843 153.23);
-    --chart-1: oklch(0.8652 0.1768 90.38);
-    --chart-2: oklch(0.5807 0.2305 259.47);
-    --chart-3: oklch(0.6667 0.2243 36.78);
-    --chart-4: oklch(0.7193 0.1843 153.23);
-    --chart-5: oklch(0.9276 0.1193 95.72);
+/* The palette is the one from the original Coderr frontend, converted from
+   its hex variables to oklch: #01B676 as the brand green, #006633 as its
+   dark counterpart and #DEFFD6 as the soft tint. Light is the primary
+   appearance, dark is a full second token set rather than a filter. */
+:root {
+    --background: oklch(1 0 0);
+    --foreground: oklch(0.2 0 0);
+    --surface-sunken: oklch(0.975 0.002 145);
+    --card: oklch(1 0 0);
+    --card-foreground: oklch(0.2 0 0);
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0.2 0 0);
+    --primary: oklch(0.684 0.154 159.8); /* #01B676 */
+    --primary-foreground: oklch(1 0 0);
+    --secondary: oklch(0.966 0.064 139.4); /* #DEFFD6 */
+    --secondary-foreground: oklch(0.447 0.116 152.7); /* #006633 */
+    --muted: oklch(0.97 0 0);
+    --muted-foreground: oklch(0.588 0.003 228); /* #7D7F80 */
+    --accent: oklch(0.966 0.064 139.4);
+    --accent-foreground: oklch(0.447 0.116 152.7);
+    --destructive: oklch(0.6 0.235 27.5); /* #f82929 */
+    --border: oklch(0.9 0 0); /* #e0e0e0 */
+    --input: oklch(0.9 0 0);
+    --ring: oklch(0.684 0.154 159.8);
+    --brand: oklch(0.684 0.154 159.8);
+    --brand-strong: oklch(0.447 0.116 152.7);
+    --brand-soft: oklch(0.966 0.064 139.4);
+    --brand-soft-foreground: oklch(0.447 0.116 152.7);
+    --rating: oklch(0.8 0.16 75);
+    --status-in-progress: oklch(0.62 0.16 250);
+    --status-completed: oklch(0.684 0.154 159.8);
+    --status-cancelled: oklch(0.6 0.235 27.5);
+    --chart-1: oklch(0.684 0.154 159.8);
+    --chart-2: oklch(0.62 0.16 250);
+    --chart-3: oklch(0.8 0.16 75);
+    --chart-4: oklch(0.447 0.116 152.7);
+    --chart-5: oklch(0.66 0.2 30);
     --radius: 0.5rem;
-    --sidebar: oklch(0.2427 0.0294 261.37);
-    --sidebar-foreground: oklch(0.9461 0 89.88);
-    --sidebar-primary: oklch(0.8652 0.1768 90.38);
-    --sidebar-primary-foreground: oklch(0.2714 0.0371 260.01);
-    --sidebar-accent: oklch(0.3084 0.0497 260.27);
-    --sidebar-accent-foreground: oklch(0.9461 0 89.88);
-    --sidebar-border: oklch(0.4017 0.0762 259.88);
-    --sidebar-ring: oklch(0.9276 0.1193 95.72);
+}
+
+.dark {
+    --background: oklch(0.19 0.008 160);
+    --foreground: oklch(0.95 0 0);
+    --surface-sunken: oklch(0.16 0.008 160);
+    --card: oklch(0.23 0.01 160);
+    --card-foreground: oklch(0.95 0 0);
+    --popover: oklch(0.23 0.01 160);
+    --popover-foreground: oklch(0.95 0 0);
+    --primary: oklch(0.735 0.145 160); /* #34C591, the hover green reads
+                                          better than #01B676 on dark */
+    --primary-foreground: oklch(0.16 0.008 160);
+    --secondary: oklch(0.3 0.05 158);
+    --secondary-foreground: oklch(0.9 0.06 150);
+    --muted: oklch(0.26 0.008 160);
+    --muted-foreground: oklch(0.72 0.01 160);
+    --accent: oklch(0.3 0.05 158);
+    --accent-foreground: oklch(0.9 0.06 150);
+    --destructive: oklch(0.65 0.22 27.5);
+    --border: oklch(0.32 0.012 160);
+    --input: oklch(0.32 0.012 160);
+    --ring: oklch(0.735 0.145 160);
+    --brand: oklch(0.735 0.145 160);
+    --brand-strong: oklch(0.85 0.12 158);
+    --brand-soft: oklch(0.3 0.05 158);
+    --brand-soft-foreground: oklch(0.9 0.06 150);
+    --rating: oklch(0.82 0.15 75);
+    --status-in-progress: oklch(0.68 0.15 250);
+    --status-completed: oklch(0.735 0.145 160);
+    --status-cancelled: oklch(0.65 0.22 27.5);
+    --chart-1: oklch(0.735 0.145 160);
+    --chart-2: oklch(0.68 0.15 250);
+    --chart-3: oklch(0.82 0.15 75);
+    --chart-4: oklch(0.85 0.12 158);
+    --chart-5: oklch(0.7 0.19 30);
 }
 
 @layer base {
@@ -119,16 +137,28 @@
 }
 
 @layer components {
-  .surface-grid {
+  /* The landing hero of the original Coderr frontend is a photo with a green
+     wash on top. The gradient carries the brand even before the image has
+     loaded. */
+  .hero-surface {
+    background-image:
+      linear-gradient(
+        105deg,
+        color-mix(in oklch, var(--brand-strong) 92%, transparent),
+        color-mix(in oklch, var(--brand) 78%, transparent)
+      );
+  }
+
+  .brand-glow {
     background-image:
       radial-gradient(
-        circle at 15% -10%,
-        color-mix(in oklch, var(--brand) 12%, transparent),
+        circle at 12% -20%,
+        color-mix(in oklch, var(--brand) 14%, transparent),
         transparent 45%
       ),
       radial-gradient(
-        circle at 85% 0%,
-        color-mix(in oklch, var(--priority-low) 14%, transparent),
+        circle at 88% -10%,
+        color-mix(in oklch, var(--brand-strong) 10%, transparent),
         transparent 40%
       );
   }

@@ -31,7 +31,7 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
   const [queryClient] = React.useState(createQueryClient)
 
   return (
-    <ThemeProvider forcedTheme="dark">
+    <ThemeProvider>
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>{children}</TooltipProvider>
         <Toaster position="top-right" richColors closeButton />

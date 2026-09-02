@@ -5,25 +5,25 @@ import "./globals.css"
 import { AppProviders } from "@/components/app-providers"
 import { cn } from "@/lib/utils"
 
-const mulish = localFont({
-  variable: "--font-mulish",
+const dmSans = localFont({
+  variable: "--font-dm-sans",
   display: "swap",
   src: [
-    { path: "./fonts/mulish-v13-latin-regular.woff2", weight: "400", style: "normal" },
-    { path: "./fonts/mulish-v13-latin-500.woff2", weight: "500", style: "normal" },
-    { path: "./fonts/mulish-v13-latin-600.woff2", weight: "600", style: "normal" },
-    { path: "./fonts/mulish-v13-latin-700.woff2", weight: "700", style: "normal" },
-    { path: "./fonts/mulish-v13-latin-800.woff2", weight: "800", style: "normal" },
+    { path: "./fonts/dm-sans-v15-latin-regular.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/dm-sans-v15-latin-500.woff2", weight: "500", style: "normal" },
+    { path: "./fonts/dm-sans-v15-latin-600.woff2", weight: "600", style: "normal" },
+    { path: "./fonts/dm-sans-v15-latin-700.woff2", weight: "700", style: "normal" },
+    { path: "./fonts/dm-sans-v15-latin-800.woff2", weight: "800", style: "normal" },
   ],
 })
 
 export const metadata: Metadata = {
   title: {
-    default: "KanMind",
-    template: "%s · KanMind",
+    default: "Coderr",
+    template: "%s · Coderr",
   },
   description:
-    "KanMind is a kanban board for small teams: shared boards, tasks with reviewers and a comment thread per ticket.",
+    "Coderr ist der Marktplatz für IT-Freelancer: Angebote vergleichen, direkt buchen und die Zusammenarbeit bewerten.",
 }
 
 export default function RootLayout({
@@ -33,9 +33,9 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="de"
       suppressHydrationWarning
-      className={cn("dark antialiased font-sans", mulish.variable)}
+      className={cn("antialiased font-sans", dmSans.variable)}
     >
       <body className="min-h-dvh">
         <AppProviders>{children}</AppProviders>
