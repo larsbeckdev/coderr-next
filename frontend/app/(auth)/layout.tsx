@@ -13,34 +13,36 @@ export default function AuthLayout({
     <SessionGate expects="guest" redirectTo="/dashboard">
       <div className="flex min-h-dvh flex-col">
         <div className="grid flex-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,520px)]">
-          <section className="surface-grid relative hidden overflow-hidden border-r border-border/60 lg:flex lg:flex-col lg:p-12">
+          <section className="hero-surface relative hidden overflow-hidden lg:flex lg:flex-col lg:p-12">
             <Image
-              src="/brand/login-background.svg"
+              src="/img/hero-bg.png"
               alt=""
               aria-hidden
               fill
               priority
-              className="pointer-events-none object-cover opacity-15"
+              className="pointer-events-none object-cover opacity-20 mix-blend-luminosity"
             />
-            <Logo href="/login" width={128} className="relative" />
+            <div className="relative">
+              <Logo href="/" width={148} className="[&_img]:brightness-0 [&_img]:invert" />
+            </div>
 
-            <div className="relative my-auto max-w-md">
-              <h1 className="font-heading text-4xl leading-tight font-bold text-primary">
-                Boards that stay
+            <div className="relative my-auto max-w-md text-white">
+              <h1 className="font-heading text-4xl leading-tight font-bold">
+                Entwicklung buchen,
                 <br />
-                out of the way.
+                ohne Umwege.
               </h1>
-              <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-                KanMind keeps a small team on the same page: shared boards, a
-                reviewer per ticket and a comment thread where the discussion
-                actually belongs.
+              <p className="mt-4 text-sm leading-relaxed text-white/85">
+                Coderr bringt Auftraggeber und IT-Freelancer zusammen: feste
+                Pakete, klare Preise, Lieferzeit und Bewertungen auf einen
+                Blick.
               </p>
             </div>
           </section>
 
           <main className="flex flex-col justify-center px-4 py-10 sm:px-10">
             <div className="mx-auto w-full max-w-sm">
-              <Logo href="/login" className="mb-8 lg:hidden" />
+              <Logo href="/" className="mb-8 lg:hidden" />
               {children}
             </div>
           </main>

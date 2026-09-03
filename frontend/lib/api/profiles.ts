@@ -18,8 +18,8 @@ export type ProfileUpdatePayload = {
   working_hours?: string
 }
 
-export function getProfile(userId: number): Promise<Profile> {
-  return request(`/profile/${userId}/`, profileSchema)
+export function getProfile(userId: number, token?: string): Promise<Profile> {
+  return request(`/profile/${userId}/`, profileSchema, { token })
 }
 
 export function updateProfile(

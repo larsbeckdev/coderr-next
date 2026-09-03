@@ -6,10 +6,13 @@ import { Loader2Icon } from "lucide-react"
 
 import { useIsHydrated } from "@/hooks/use-is-hydrated"
 import { useSession } from "@/lib/auth/use-session"
+import type { ProfileType } from "@/lib/api/types"
 
 type SessionGateProps = {
   /** "user" keeps signed-in visitors, "guest" keeps signed-out visitors. */
   expects: "user" | "guest"
+  /** Narrows "user" to one side of the marketplace. */
+  requires?: ProfileType
   redirectTo: string
   children: React.ReactNode
 }
@@ -19,11 +22,20 @@ type SessionGateProps = {
  * earliest point at which the route can be gated. Until then a spinner stands
  * in for the protected content to avoid flashing it at signed-out visitors.
  */
-export function SessionGate({ expects, redirectTo, children }: SessionGateProps) {
+export function SessionGate({
+  expects,
+  requires,
+  redirectTo,
+  children,
+}: SessionGateProps) {
   const router = useRouter()
   const session = useSession()
   const isHydrated = useIsHydrated()
-  const isAllowed = expects === "user" ? session !== null : session === null
+
+  const isAllowed =
+    expects === "guest"
+      ? session === null
+      : session !== null && (!requires || session.type === requires)
 
   React.useEffect(() => {
     if (isHydrated && !isAllowed) {
@@ -35,7 +47,7 @@ export function SessionGate({ expects, redirectTo, children }: SessionGateProps)
     return (
       <div className="flex min-h-dvh items-center justify-center" aria-busy="true">
         <Loader2Icon className="size-6 animate-spin text-primary" />
-        <span className="sr-only">Loading</span>
+        <span className="sr-only">Wird geladen</span>
       </div>
     )
   }

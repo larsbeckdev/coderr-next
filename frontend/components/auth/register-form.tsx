@@ -1,184 +1,209 @@
 "use client"
 
 import { useRouter } from "next/navigation"
-import { useForm, useWatch } from "react-hook-form"
+import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { UserPlusIcon } from "lucide-react"
+import { BriefcaseIcon, SearchIcon, UserPlusIcon } from "lucide-react"
 import { toast } from "sonner"
 import { z } from "zod"
 
-import { Field } from "@/components/forms/field"
 import { PasswordInput } from "@/components/auth/password-input"
+import { Field } from "@/components/forms/field"
 import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { register as registerUser } from "@/lib/api/auth"
 import { ApiError } from "@/lib/api/client"
-import { writeSession } from "@/lib/auth/session"
-
-const MIN_PASSWORD_LENGTH = 8
+import { signUp } from "@/lib/auth/sign-in"
+import { cn } from "@/lib/utils"
 
 const registerSchema = z
   .object({
-    fullname: z.string().min(2, "Please enter your full name."),
-    email: z.string().min(1, "Please enter your e-mail address.").email("Enter a valid e-mail address."),
-    password: z
+    type: z.enum(["customer", "business"]),
+    username: z
       .string()
-      .min(MIN_PASSWORD_LENGTH, `Use at least ${MIN_PASSWORD_LENGTH} characters.`),
-    repeated_password: z.string(),
-    privacy: z
-      .boolean()
-      .refine((accepted) => accepted, "Please accept the privacy policy."),
+      .min(3, "Der Benutzername braucht mindestens 3 Zeichen.")
+      .max(150, "Der Benutzername ist zu lang."),
+    email: z
+      .string()
+      .min(1, "Bitte gib deine E-Mail-Adresse ein.")
+      .email("Das sieht nicht nach einer E-Mail-Adresse aus."),
+    password: z.string().min(8, "Das Passwort braucht mindestens 8 Zeichen."),
+    repeated_password: z.string().min(1, "Bitte wiederhole das Passwort."),
   })
   .refine((values) => values.password === values.repeated_password, {
     path: ["repeated_password"],
-    message: "The passwords do not match.",
+    message: "Die Passwörter stimmen nicht überein.",
   })
 
 type RegisterValues = z.infer<typeof registerSchema>
 
-/** Maps the DRF field names of the registration endpoint onto the form. */
-const API_FIELD_MAP: Record<string, keyof RegisterValues> = {
-  fullname: "fullname",
-  email: "email",
-  password: "password",
-  repeated_password: "repeated_password",
-}
+const ROLE_OPTIONS = [
+  {
+    value: "customer",
+    label: "Ich suche Unterstützung",
+    hint: "Angebote buchen und bewerten",
+    icon: SearchIcon,
+  },
+  {
+    value: "business",
+    label: "Ich biete Leistungen an",
+    hint: "Angebote veröffentlichen und Aufträge annehmen",
+    icon: BriefcaseIcon,
+  },
+] as const
 
 export function RegisterForm() {
   const router = useRouter()
   const form = useForm<RegisterValues>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
-      fullname: "",
+      type: "customer",
+      username: "",
       email: "",
       password: "",
       repeated_password: "",
-      privacy: false,
     },
   })
 
-  const isPrivacyAccepted = useWatch({ control: form.control, name: "privacy" })
+  const selectedType = form.watch("type")
 
   async function onSubmit(values: RegisterValues) {
     try {
-      const auth = await registerUser({
-        fullname: values.fullname,
-        email: values.email,
-        password: values.password,
-        repeated_password: values.repeated_password,
-      })
-      writeSession({
-        token: auth.token,
-        userId: auth.user_id,
-        email: auth.email,
-        fullname: auth.fullname,
-      })
-      router.replace("/dashboard")
+      await signUp(values)
+      toast.success("Willkommen bei Coderr!")
+      router.replace(values.type === "business" ? "/profile" : "/offers")
     } catch (error) {
-      if (!(error instanceof ApiError)) {
-        toast.error("Sign up failed. Please try again.")
-        return
-      }
-      const entries = Object.entries(error.fieldErrors)
-      if (entries.length === 0) {
-        toast.error(error.message)
-        return
-      }
-      for (const [field, messages] of entries) {
-        const target = API_FIELD_MAP[field]
-        if (target) {
-          form.setError(target, { message: messages[0] })
-        } else {
-          toast.error(messages[0])
+      if (error instanceof ApiError) {
+        // DRF answers with one entry per rejected field, so the message lands
+        // on the input that caused it instead of in a generic banner.
+        const fields: (keyof RegisterValues)[] = [
+          "username",
+          "email",
+          "password",
+          "repeated_password",
+        ]
+        let handled = false
+        for (const field of fields) {
+          const message = error.fieldErrors[field]?.[0]
+          if (message) {
+            form.setError(field, { message })
+            handled = true
+          }
         }
+        if (!handled) {
+          toast.error(error.message)
+        }
+        return
       }
+      toast.error("Die Registrierung ist fehlgeschlagen.")
     }
   }
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-5">
-      <Field label="Full name" htmlFor="fullname" error={form.formState.errors.fullname?.message}>
+      <fieldset className="grid gap-2">
+        <legend className="mb-2 text-sm text-muted-foreground">
+          Wie möchtest du Coderr nutzen?
+        </legend>
+        <div className="grid gap-2 sm:grid-cols-2">
+          {ROLE_OPTIONS.map((option) => {
+            const isActive = selectedType === option.value
+            return (
+              <label
+                key={option.value}
+                className={cn(
+                  "flex cursor-pointer items-start gap-3 rounded-lg border p-3 transition-colors",
+                  isActive
+                    ? "border-primary bg-brand-soft text-brand-soft-foreground"
+                    : "border-border hover:border-primary/40 hover:bg-muted/60"
+                )}
+              >
+                <input
+                  type="radio"
+                  value={option.value}
+                  className="sr-only"
+                  {...form.register("type")}
+                />
+                <option.icon
+                  className={cn(
+                    "mt-0.5 size-4 shrink-0",
+                    isActive ? "text-primary" : "text-muted-foreground"
+                  )}
+                />
+                <span className="grid gap-0.5">
+                  <span className="text-sm font-semibold">{option.label}</span>
+                  <span className="text-xs opacity-80">{option.hint}</span>
+                </span>
+              </label>
+            )
+          })}
+        </div>
+      </fieldset>
+
+      <Field
+        label="Benutzername"
+        htmlFor="username"
+        error={form.formState.errors.username?.message}
+      >
         <Input
-          id="fullname"
-          autoComplete="name"
-          placeholder="Ada Lovelace"
-          className="h-9 text-sm"
-          aria-invalid={Boolean(form.formState.errors.fullname)}
-          {...form.register("fullname")}
+          id="username"
+          autoComplete="username"
+          className="h-10 text-sm"
+          aria-invalid={Boolean(form.formState.errors.username)}
+          {...form.register("username")}
         />
       </Field>
 
-      <Field label="E-Mail" htmlFor="email" error={form.formState.errors.email?.message}>
+      <Field
+        label="E-Mail"
+        htmlFor="email"
+        error={form.formState.errors.email?.message}
+      >
         <Input
           id="email"
           type="email"
           autoComplete="email"
-          placeholder="you@example.com"
-          className="h-9 text-sm"
+          placeholder="du@example.com"
+          className="h-10 text-sm"
           aria-invalid={Boolean(form.formState.errors.email)}
           {...form.register("email")}
         />
       </Field>
 
       <Field
-        label="Password"
+        label="Passwort"
         htmlFor="password"
+        hint="Mindestens 8 Zeichen."
         error={form.formState.errors.password?.message}
-        hint={`At least ${MIN_PASSWORD_LENGTH} characters.`}
       >
         <PasswordInput
           id="password"
           autoComplete="new-password"
-          placeholder="••••••••"
           aria-invalid={Boolean(form.formState.errors.password)}
           {...form.register("password")}
         />
       </Field>
 
       <Field
-        label="Confirm password"
+        label="Passwort wiederholen"
         htmlFor="repeated_password"
         error={form.formState.errors.repeated_password?.message}
       >
         <PasswordInput
           id="repeated_password"
           autoComplete="new-password"
-          placeholder="••••••••"
           aria-invalid={Boolean(form.formState.errors.repeated_password)}
           {...form.register("repeated_password")}
         />
       </Field>
 
-      <div className="grid gap-1.5">
-        <div className="flex items-center gap-2">
-          <Checkbox
-            id="privacy"
-            checked={isPrivacyAccepted}
-            onCheckedChange={(checked) =>
-              form.setValue("privacy", checked, { shouldValidate: true })
-            }
-          />
-          <Label htmlFor="privacy" className="text-sm text-muted-foreground">
-            I accept the privacy policy.
-          </Label>
-        </div>
-        {form.formState.errors.privacy ? (
-          <p role="alert" className="text-xs text-destructive">
-            {form.formState.errors.privacy.message}
-          </p>
-        ) : null}
-      </div>
-
       <Button
         type="submit"
         size="lg"
         disabled={form.formState.isSubmitting}
-        className="h-10 w-full text-sm"
+        className="h-11 w-full"
       >
         <UserPlusIcon data-icon="inline-start" />
-        {form.formState.isSubmitting ? "Creating account…" : "Sign up"}
+        {form.formState.isSubmitting ? "Konto wird erstellt…" : "Konto erstellen"}
       </Button>
     </form>
   )

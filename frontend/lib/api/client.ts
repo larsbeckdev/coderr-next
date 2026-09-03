@@ -82,6 +82,12 @@ type RequestOptions = {
   formData?: FormData
   /** Endpoints reachable without a token (login, registration, offer list). */
   anonymous?: boolean
+  /**
+   * Overrides the stored token. Needed once, right after login: the profile
+   * type has to be read before the session can be written, and the stored
+   * token does not exist yet at that point.
+   */
+  token?: string
 }
 
 async function readBody(response: Response): Promise<unknown> {
@@ -104,7 +110,7 @@ export async function request<S extends z.ZodTypeAny>(
   schema: S,
   options: RequestOptions = {}
 ): Promise<z.output<S>> {
-  const { method = "GET", body, formData, anonymous = false } = options
+  const { method = "GET", body, formData, anonymous = false, token } = options
   const headers: Record<string, string> = {}
 
   // FormData sets its own Content-Type including the multipart boundary, so
@@ -113,9 +119,9 @@ export async function request<S extends z.ZodTypeAny>(
     headers["Content-Type"] = "application/json"
   }
   if (!anonymous) {
-    const token = getAuthToken()
-    if (token) {
-      headers.Authorization = `Token ${token}`
+    const authToken = token ?? getAuthToken()
+    if (authToken) {
+      headers.Authorization = `Token ${authToken}`
     }
   }
 
