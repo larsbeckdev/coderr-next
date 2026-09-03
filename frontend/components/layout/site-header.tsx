@@ -1,17 +1,23 @@
 "use client"
 
+import * as React from "react"
 import Link from "next/link"
-import { usePathname, useRouter } from "next/navigation"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import {
   LayoutDashboardIcon,
   LogOutIcon,
-  ShieldCheckIcon,
-  SquareKanbanIcon,
+  PackageIcon,
+  PlusIcon,
+  ReceiptTextIcon,
+  SearchIcon,
+  UserIcon,
 } from "lucide-react"
 import { useQueryClient } from "@tanstack/react-query"
 
 import { Logo } from "@/components/brand/logo"
+import { ThemeToggle } from "@/components/layout/theme-toggle"
 import { UserAvatar } from "@/components/user-avatar"
+import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,29 +25,24 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { useIsAdmin } from "@/hooks/use-admin"
+import { Input } from "@/components/ui/input"
+import { useOwnProfile } from "@/hooks/use-profiles"
 import { clearSession } from "@/lib/auth/session"
-import { useSession } from "@/lib/auth/use-session"
+import { displayName, useSession } from "@/lib/auth/use-session"
 import { cn } from "@/lib/utils"
 
 const NAV_ITEMS = [
-  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboardIcon },
-  { href: "/boards", label: "Boards", icon: SquareKanbanIcon },
+  { href: "/offers", label: "Angebote", icon: PackageIcon },
+  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboardIcon, private: true },
+  { href: "/orders", label: "Aufträge", icon: ReceiptTextIcon, private: true },
 ]
-
-const ADMIN_NAV_ITEM = {
-  href: "/admin",
-  label: "Admin",
-  icon: ShieldCheckIcon,
-}
 
 export function SiteHeader() {
   const pathname = usePathname()
   const router = useRouter()
   const queryClient = useQueryClient()
   const session = useSession()
-  const isAdmin = useIsAdmin()
-  const navItems = isAdmin ? [...NAV_ITEMS, ADMIN_NAV_ITEM] : NAV_ITEMS
+  const { data: profile } = useOwnProfile()
 
   function handleLogout() {
     clearSession()
@@ -49,12 +50,23 @@ export function SiteHeader() {
     router.replace("/login")
   }
 
+  const navItems = NAV_ITEMS.filter((item) => session || !item.private)
+  const name = profile
+    ? displayName(profile.first_name, profile.last_name, profile.username)
+    : (session?.username ?? "")
+
   return (
-    <header className="sticky top-0 z-40 border-b border-border/60 bg-surface-sunken/85 backdrop-blur">
-      <div className="mx-auto flex h-16 w-full max-w-[1440px] items-center gap-6 px-4 sm:px-6">
+    <header className="sticky top-0 z-40 border-b border-border bg-background/90 backdrop-blur">
+      <div className="mx-auto flex h-16 w-full max-w-[1440px] items-center gap-4 px-4 sm:px-6">
         <Logo />
 
-        <nav aria-label="Main" className="flex items-center gap-1">
+        {/* useSearchParams opts the subtree out of static rendering, so the
+            boundary keeps that scoped to the search box. */}
+        <React.Suspense fallback={<div className="hidden flex-1 md:block" />}>
+          <HeaderSearch className="hidden min-w-0 flex-1 md:flex" />
+        </React.Suspense>
+
+        <nav aria-label="Hauptnavigation" className="ml-auto flex items-center gap-1">
           {navItems.map((item) => {
             const isActive = pathname.startsWith(item.href)
             return (
@@ -65,39 +77,112 @@ export function SiteHeader() {
                 className={cn(
                   "flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors",
                   isActive
-                    ? "bg-card text-primary"
-                    : "text-muted-foreground hover:bg-card/60 hover:text-foreground"
+                    ? "bg-brand-soft text-brand-soft-foreground"
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
                 )}
               >
                 <item.icon className="size-4" />
-                <span className="hidden sm:inline">{item.label}</span>
+                <span className="hidden lg:inline">{item.label}</span>
               </Link>
             )
           })}
         </nav>
 
+        <ThemeToggle />
+
         {session ? (
-          <DropdownMenu>
-            <DropdownMenuTrigger
-              aria-label="Account menu"
-              className="ml-auto rounded-full focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:outline-none"
-            >
-              <UserAvatar fullname={session.fullname} />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
-              <div className="px-2 py-1.5">
-                <p className="truncate text-sm font-semibold">{session.fullname}</p>
-                <p className="truncate text-xs text-muted-foreground">{session.email}</p>
-              </div>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={handleLogout}>
-                <LogOutIcon className="size-4" />
-                Log out
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        ) : null}
+          <div className="flex items-center gap-2">
+            {session.type === "business" ? (
+              <Button
+                size="md"
+                className="hidden sm:inline-flex"
+                render={<Link href="/offers/new" />}
+              >
+                <PlusIcon data-icon="inline-start" />
+                Angebot
+              </Button>
+            ) : null}
+
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                aria-label="Kontomenü"
+                className="rounded-full focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:outline-none"
+              >
+                <UserAvatar name={name} src={profile?.file} />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <div className="px-2 py-1.5">
+                  <p className="truncate text-sm font-semibold">{name}</p>
+                  <p className="truncate text-xs text-muted-foreground">
+                    {session.type === "business" ? "Anbieter" : "Kunde"}
+                  </p>
+                </div>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem render={<Link href="/profile" />}>
+                  <UserIcon className="size-4" />
+                  Mein Profil
+                </DropdownMenuItem>
+                <DropdownMenuItem render={<Link href="/orders" />}>
+                  <ReceiptTextIcon className="size-4" />
+                  Aufträge
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleLogout}>
+                  <LogOutIcon className="size-4" />
+                  Abmelden
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        ) : (
+          <div className="flex items-center gap-2">
+            <Button variant="ghost" size="md" render={<Link href="/login" />}>
+              Anmelden
+            </Button>
+            <Button size="md" render={<Link href="/register" />}>
+              Registrieren
+            </Button>
+          </div>
+        )}
       </div>
     </header>
+  )
+}
+
+/**
+ * The search box writes to the same query parameter the offer list reads, so
+ * a search from any page lands on a shareable URL instead of hidden state.
+ */
+function HeaderSearch({ className }: { className?: string }) {
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+  const activeSearch = pathname === "/offers" ? (searchParams.get("search") ?? "") : ""
+  const [value, setValue] = React.useState(activeSearch)
+
+  React.useEffect(() => {
+    setValue(activeSearch)
+  }, [activeSearch])
+
+  function handleSubmit(event: React.FormEvent) {
+    event.preventDefault()
+    const query = value.trim()
+    router.push(query ? `/offers?search=${encodeURIComponent(query)}` : "/offers")
+  }
+
+  return (
+    <form role="search" onSubmit={handleSubmit} className={cn("items-center", className)}>
+      <div className="relative w-full max-w-sm">
+        <SearchIcon className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
+        <Input
+          type="search"
+          value={value}
+          onChange={(event) => setValue(event.target.value)}
+          placeholder="Wonach suchst du?"
+          aria-label="Angebote durchsuchen"
+          className="h-9 pl-9 text-sm"
+        />
+      </div>
+    </form>
   )
 }
