@@ -26,7 +26,10 @@ const packageSchema = z.object({
 export const offerFormSchema = z.object({
   title: z.string().trim().min(1, "Bitte gib dem Angebot einen Titel."),
   description: z.string().trim().min(1, "Beschreibe kurz, was du anbietest."),
-  details: z.tuple([packageSchema, packageSchema, packageSchema]),
+  // A fixed-length array rather than a tuple: react-hook-form derives its
+  // field paths from the type, and a tuple narrows them to details.0.title
+  // and friends, which no shared field component can address.
+  details: z.array(packageSchema).length(OFFER_TYPES.length),
 })
 
 export type OfferFormValues = z.infer<typeof offerFormSchema>
@@ -50,7 +53,7 @@ export function emptyOfferValues(): OfferFormValues {
       delivery_time_in_days: PLACEHOLDER_DELIVERY[index],
       revisions: index + 1,
       features: [],
-    })) as OfferFormValues["details"],
+    })),
   }
 }
 
@@ -72,7 +75,7 @@ export function offerValuesFrom(
         revisions: existing?.revisions ?? index + 1,
         features: existing?.features ?? [],
       }
-    }) as OfferFormValues["details"],
+    }),
   }
 }
 
