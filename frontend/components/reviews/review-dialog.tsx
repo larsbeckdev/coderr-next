@@ -28,6 +28,12 @@ type ReviewDialogProps = {
   review?: Review | null
 }
 
+/**
+ * Mount this only while it is open. The form state is seeded from the review
+ * prop, and remounting is what resets it for the next provider - cheaper and
+ * less error prone than copying props into state from an effect.
+ */
+
 export function ReviewDialog({
   open,
   onOpenChange,
@@ -40,16 +46,6 @@ export function ReviewDialog({
   const [rating, setRating] = React.useState(review?.rating ?? 5)
   const [description, setDescription] = React.useState(review?.description ?? "")
   const [error, setError] = React.useState<string | null>(null)
-
-  // Reopening the dialog for a different review has to start from that
-  // review, not from whatever was typed the last time.
-  React.useEffect(() => {
-    if (open) {
-      setRating(review?.rating ?? 5)
-      setDescription(review?.description ?? "")
-      setError(null)
-    }
-  }, [open, review])
 
   const isPending = createReview.isPending || updateReview.isPending
 

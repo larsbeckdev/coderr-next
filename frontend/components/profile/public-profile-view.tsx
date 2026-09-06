@@ -91,9 +91,8 @@ export function PublicProfileView({ userId }: { userId: number }) {
         </>
       ) : null}
 
-      {canReview ? (
+      {canReview && isReviewing ? (
         <ReviewDialogForProvider
-          open={isReviewing}
           onOpenChange={setIsReviewing}
           userId={userId}
           name={name}
@@ -204,12 +203,10 @@ function ProviderOffers({ userId, name }: { userId: number; name: string }) {
  * edits it instead of running into the one-review-per-provider constraint.
  */
 function ReviewDialogForProvider({
-  open,
   onOpenChange,
   userId,
   name,
 }: {
-  open: boolean
   onOpenChange: (open: boolean) => void
   userId: number
   name: string
@@ -221,7 +218,7 @@ function ReviewDialogForProvider({
 
   return (
     <ReviewDialog
-      open={open}
+      open
       onOpenChange={onOpenChange}
       businessUserId={userId}
       businessUserName={name}

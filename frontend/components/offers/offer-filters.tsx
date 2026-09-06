@@ -7,6 +7,7 @@ import { SearchIcon, XIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { useDraft } from "@/hooks/use-draft"
 import { OFFER_ORDERINGS } from "@/lib/api/offers"
 import {
   DELIVERY_TIME_OPTIONS,
@@ -34,11 +35,8 @@ export function OfferFilters({ resultCount }: { resultCount?: number }) {
   const maxDeliveryTime = searchParams.get("max_delivery_time") ?? ""
   const ordering = searchParams.get("ordering") ?? DEFAULT_ORDERING
 
-  const [searchDraft, setSearchDraft] = React.useState(search)
-  const [minPriceDraft, setMinPriceDraft] = React.useState(minPrice)
-
-  React.useEffect(() => setSearchDraft(search), [search])
-  React.useEffect(() => setMinPriceDraft(minPrice), [minPrice])
+  const [searchDraft, setSearchDraft] = useDraft(search)
+  const [minPriceDraft, setMinPriceDraft] = useDraft(minPrice)
 
   function apply(key: string, value: string) {
     router.push(`${pathname}${withOfferParam(searchParams, key, value)}`)

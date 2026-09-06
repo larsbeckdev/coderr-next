@@ -26,6 +26,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
+import { useDraft } from "@/hooks/use-draft"
 import { useOwnProfile } from "@/hooks/use-profiles"
 import { clearSession } from "@/lib/auth/session"
 import { displayName, useSession } from "@/lib/auth/use-session"
@@ -158,11 +159,7 @@ function HeaderSearch({ className }: { className?: string }) {
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const activeSearch = pathname === "/offers" ? (searchParams.get("search") ?? "") : ""
-  const [value, setValue] = React.useState(activeSearch)
-
-  React.useEffect(() => {
-    setValue(activeSearch)
-  }, [activeSearch])
+  const [value, setValue] = useDraft(activeSearch)
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
