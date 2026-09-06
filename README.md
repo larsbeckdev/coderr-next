@@ -1,6 +1,8 @@
-# KanMind
+# Coderr
 
-Kanban board with a Django REST API ([backend/](backend/)) and a Next.js frontend ([frontend/](frontend/)).
+Marketplace for IT freelancers with a Django REST API ([backend/](backend/)) and a Next.js frontend ([frontend/](frontend/)).
+
+Business accounts publish offers with a basic, standard and premium package; customer accounts book a package, follow the order status and leave one review per provider.
 
 For local development without Docker, follow [backend/README.md](backend/README.md) and `npm run dev` in `frontend/`. Everything below describes the Docker Compose stack that runs both on a server.
 
@@ -11,7 +13,7 @@ Two containers, one port each:
 | Service | Port | Role |
 | --- | --- | --- |
 | `web` | `3071` | Next.js in standalone mode. |
-| `api` | `3070` | Django behind gunicorn, serving `/api/`, `/admin/` and its own static files. |
+| `api` | `3070` | Django behind gunicorn, serving `/api/`, `/admin/`, `/media/` and its own static files. |
 
 The browser talks to both directly, so the API port has to be reachable from wherever the app is opened. Which port that is gets compiled into the frontend bundle at build time — the host name does not: the client derives it from the address the page was loaded from. The same image therefore runs on `localhost`, on a LAN address and on the demo server without a rebuild.
 
@@ -37,22 +39,23 @@ All of it lives in `.env`, see [.env.example](.env.example) for the full list wi
 | `API_PORT` | `3070` | Host port of the API. Also compiled into the frontend bundle, so changing it requires `docker compose up --build`, not just a restart. |
 | `WEB_PORT` | `3071` | Host port of the frontend. |
 | `DJANGO_ALLOWED_HOSTS` | `*` | Comma separated. Narrow this once the host name is fixed. |
-| `DJANGO_CORS_ALLOWED_ORIGINS` | empty | Comma separated origins the frontend runs on, scheme and host only. Empty allows every origin. |
+| `DJANGO_CORS_ALLOW_ALL_ORIGINS` | `True` | Set to `False` on a public deployment and list the origins below. |
+| `DJANGO_CORS_ALLOWED_ORIGINS` | empty | Comma separated origins the frontend runs on, scheme and host only. |
 | `NEXT_PUBLIC_API_BASE_URL` | empty | Only for setups where the API is not on `<same host>:<API_PORT>`, e.g. behind a domain: `https://api.example.com/api`. |
 
 `DJANGO_DEBUG` defaults to `0` in the stack. Without any environment variables the settings keep their development defaults, so the local workflow in `backend/README.md` is unaffected.
 
 ### Data
 
-The SQLite database is bind mounted to `./data/db.sqlite3`, so it survives rebuilds and can be copied or backed up like any file. `./data` is git ignored.
+`./data` is bind mounted into the `api` container and holds both the SQLite database (`data/db.sqlite3`) and the uploaded profile pictures and offer images (`data/media/`). Both survive rebuilds and can be copied or backed up like any file. `./data` is git ignored.
 
-### Demo data
+### Demo accounts
 
 ```bash
-docker compose run --rm api python manage.py seed_demo
+docker compose run --rm api python manage.py create_guest_users
 ```
 
-Creates the demo users and prints their credentials. Safe to run more than once.
+Creates the customer account `andrey` and the business account `kevin`. The login page offers both as one-click buttons, so the two sides of the marketplace can be tried without signing up.
 
 ### Admin user
 
@@ -74,8 +77,9 @@ NEXT_PUBLIC_API_BASE_URL=https://demo.example.com/api
 
 Without the first two the admin login rejects its own POST as a CSRF failure.
 
-The frontend calls the API cross-origin, so CORS is required in any case. Without `DJANGO_CORS_ALLOWED_ORIGINS` every origin is accepted, which is fine in the local network and too wide for a public deployment:
+The frontend calls the API cross-origin, so CORS is required in any case. `DJANGO_CORS_ALLOW_ALL_ORIGINS=True` accepts every origin, which is fine in the local network and too wide for a public deployment:
 
 ```bash
+DJANGO_CORS_ALLOW_ALL_ORIGINS=False
 DJANGO_CORS_ALLOWED_ORIGINS=https://demo.example.com
 ```
