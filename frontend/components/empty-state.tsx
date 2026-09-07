@@ -34,7 +34,9 @@ export function EmptyState({
       <div className="grid gap-1">
         <p className="font-heading text-lg font-semibold">{title}</p>
         {description ? (
-          <p className="max-w-sm text-sm text-muted-foreground">{description}</p>
+          <p className="max-w-sm text-sm text-muted-foreground">
+            {description}
+          </p>
         ) : null}
       </div>
       {action}

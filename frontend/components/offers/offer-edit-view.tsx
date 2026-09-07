@@ -1,7 +1,6 @@
 "use client"
 
 import * as React from "react"
-import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { Trash2Icon } from "lucide-react"
 import { toast } from "sonner"
@@ -19,6 +18,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
+import { LinkButton } from "@/components/ui/link-button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useDeleteOffer, useOffer } from "@/hooks/use-offers"
 import { ApiError } from "@/lib/api/client"
@@ -48,9 +48,9 @@ export function OfferEditView({ offerId }: { offerId: number }) {
         title="Angebot nicht gefunden"
         description={error?.message}
         action={
-          <Button variant="outline" size="md" render={<Link href="/offers" />}>
+          <LinkButton variant="outline" size="md" href="/offers">
             Zurück zu den Angeboten
-          </Button>
+          </LinkButton>
         }
       />
     )
@@ -64,13 +64,9 @@ export function OfferEditView({ offerId }: { offerId: number }) {
         title="Das ist nicht dein Angebot"
         description="Bearbeiten kann ein Angebot nur das Anbieterkonto, das es veröffentlicht hat."
         action={
-          <Button
-            variant="outline"
-            size="md"
-            render={<Link href={`/offers/${offerId}`} />}
-          >
+          <LinkButton variant="outline" size="md" href={`/offers/${offerId}`}>
             Angebot ansehen
-          </Button>
+          </LinkButton>
         }
       />
     )
@@ -94,7 +90,9 @@ export function OfferEditView({ offerId }: { offerId: number }) {
     <>
       <header className="mb-8 flex flex-wrap items-end justify-between gap-4">
         <div className="grid gap-1">
-          <h1 className="font-heading text-3xl font-bold">Angebot bearbeiten</h1>
+          <h1 className="font-heading text-3xl font-bold">
+            Angebot bearbeiten
+          </h1>
           <p className="text-sm text-muted-foreground">
             Änderungen an den Paketen gelten nur für neue Aufträge – bereits
             erteilte Aufträge behalten ihre Konditionen.
@@ -117,7 +115,10 @@ export function OfferEditView({ offerId }: { offerId: number }) {
         defaultValues={offerValuesFrom(data.offer, data.packages)}
       />
 
-      <AlertDialog open={isConfirmingDelete} onOpenChange={setIsConfirmingDelete}>
+      <AlertDialog
+        open={isConfirmingDelete}
+        onOpenChange={setIsConfirmingDelete}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Angebot löschen?</AlertDialogTitle>

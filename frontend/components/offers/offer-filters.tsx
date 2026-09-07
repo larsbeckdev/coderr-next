@@ -141,7 +141,11 @@ export function OfferFilters({ resultCount }: { resultCount?: number }) {
         </p>
 
         {hasActiveFilters(searchParams) ? (
-          <Button variant="ghost" size="md" onClick={() => router.push(pathname)}>
+          <Button
+            variant="ghost"
+            size="md"
+            onClick={() => router.push(pathname)}
+          >
             <XIcon data-icon="inline-start" />
             Filter zurücksetzen
           </Button>

@@ -16,8 +16,8 @@ import { useQueryClient } from "@tanstack/react-query"
 
 import { Logo } from "@/components/brand/logo"
 import { ThemeToggle } from "@/components/layout/theme-toggle"
+import { LinkButton } from "@/components/ui/link-button"
 import { UserAvatar } from "@/components/user-avatar"
-import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -34,7 +34,12 @@ import { cn } from "@/lib/utils"
 
 const NAV_ITEMS = [
   { href: "/offers", label: "Angebote", icon: PackageIcon },
-  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboardIcon, private: true },
+  {
+    href: "/dashboard",
+    label: "Dashboard",
+    icon: LayoutDashboardIcon,
+    private: true,
+  },
   { href: "/orders", label: "Aufträge", icon: ReceiptTextIcon, private: true },
 ]
 
@@ -67,7 +72,10 @@ export function SiteHeader() {
           <HeaderSearch className="hidden min-w-0 flex-1 md:flex" />
         </React.Suspense>
 
-        <nav aria-label="Hauptnavigation" className="ml-auto flex items-center gap-1">
+        <nav
+          aria-label="Hauptnavigation"
+          className="ml-auto flex items-center gap-1"
+        >
           {navItems.map((item) => {
             const isActive = pathname.startsWith(item.href)
             return (
@@ -94,14 +102,14 @@ export function SiteHeader() {
         {session ? (
           <div className="flex items-center gap-2">
             {session.type === "business" ? (
-              <Button
+              <LinkButton
                 size="md"
                 className="hidden sm:inline-flex"
-                render={<Link href="/offers/new" />}
+                href="/offers/new"
               >
                 <PlusIcon data-icon="inline-start" />
                 Angebot
-              </Button>
+              </LinkButton>
             ) : null}
 
             <DropdownMenu>
@@ -137,12 +145,12 @@ export function SiteHeader() {
           </div>
         ) : (
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="md" render={<Link href="/login" />}>
+            <LinkButton variant="ghost" size="md" href="/login">
               Anmelden
-            </Button>
-            <Button size="md" render={<Link href="/register" />}>
+            </LinkButton>
+            <LinkButton size="md" href="/register">
               Registrieren
-            </Button>
+            </LinkButton>
           </div>
         )}
       </div>
@@ -158,17 +166,24 @@ function HeaderSearch({ className }: { className?: string }) {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
-  const activeSearch = pathname === "/offers" ? (searchParams.get("search") ?? "") : ""
+  const activeSearch =
+    pathname === "/offers" ? (searchParams.get("search") ?? "") : ""
   const [value, setValue] = useDraft(activeSearch)
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
     const query = value.trim()
-    router.push(query ? `/offers?search=${encodeURIComponent(query)}` : "/offers")
+    router.push(
+      query ? `/offers?search=${encodeURIComponent(query)}` : "/offers"
+    )
   }
 
   return (
-    <form role="search" onSubmit={handleSubmit} className={cn("items-center", className)}>
+    <form
+      role="search"
+      onSubmit={handleSubmit}
+      className={cn("items-center", className)}
+    >
       <div className="relative w-full max-w-sm">
         <SearchIcon className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
         <Input

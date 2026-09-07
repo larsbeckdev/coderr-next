@@ -7,19 +7,21 @@ export const metadata: Metadata = {
 export default function ImprintPage() {
   return (
     <article className="grid gap-8">
-      <h1 className="font-heading text-3xl font-bold text-primary">Impressum</h1>
+      <h1 className="font-heading text-3xl font-bold text-primary">
+        Impressum
+      </h1>
 
       <section className="grid gap-3">
         <h2 className="font-heading text-lg font-semibold">
           Angaben gemäß § 5 TMG
         </h2>
-        <address className="grid gap-1 text-sm not-italic text-muted-foreground">
+        <address className="grid gap-1 text-sm text-muted-foreground not-italic">
           <p>
             <strong className="text-foreground">Name:</strong> Max Mustermann
           </p>
           <p>
-            <strong className="text-foreground">Anschrift:</strong>{" "}
-            Musterstraße 1, 12345 Musterstadt
+            <strong className="text-foreground">Anschrift:</strong> Musterstraße
+            1, 12345 Musterstadt
           </p>
           <p>
             <strong className="text-foreground">Telefon:</strong>{" "}

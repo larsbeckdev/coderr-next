@@ -1,10 +1,9 @@
 "use client"
 
-import Link from "next/link"
 import { ArrowRightIcon } from "lucide-react"
 
 import { OfferCard, OfferCardSkeleton } from "@/components/offers/offer-card"
-import { Button } from "@/components/ui/button"
+import { LinkButton } from "@/components/ui/link-button"
 import { useOffers } from "@/hooks/use-offers"
 
 const FEATURED_PARAMS = { page_size: 4, ordering: "-updated_at" } as const
@@ -26,15 +25,17 @@ export function FeaturedOffers() {
             Die zuletzt veröffentlichten Angebote.
           </p>
         </div>
-        <Button variant="ghost" size="md" render={<Link href="/offers" />}>
+        <LinkButton variant="ghost" size="md" href="/offers">
           Alle ansehen
           <ArrowRightIcon data-icon="inline-end" />
-        </Button>
+        </LinkButton>
       </div>
 
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {isPending
-          ? Array.from({ length: 4 }, (_, index) => <OfferCardSkeleton key={index} />)
+          ? Array.from({ length: 4 }, (_, index) => (
+              <OfferCardSkeleton key={index} />
+            ))
           : offers.map((offer) => <OfferCard key={offer.id} offer={offer} />)}
       </div>
     </section>

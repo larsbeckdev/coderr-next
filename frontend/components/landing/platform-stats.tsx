@@ -1,6 +1,11 @@
 "use client"
 
-import { BriefcaseIcon, MessageSquareIcon, PackageIcon, StarIcon } from "lucide-react"
+import {
+  BriefcaseIcon,
+  MessageSquareIcon,
+  PackageIcon,
+  StarIcon,
+} from "lucide-react"
 
 import { Skeleton } from "@/components/ui/skeleton"
 import { useBaseInfo } from "@/hooks/use-base-info"
@@ -11,8 +16,16 @@ export function PlatformStats() {
 
   const stats = [
     { label: "Angebote", value: data?.offer_count, icon: PackageIcon },
-    { label: "Bewertungen", value: data?.review_count, icon: MessageSquareIcon },
-    { label: "Anbieter", value: data?.business_profile_count, icon: BriefcaseIcon },
+    {
+      label: "Bewertungen",
+      value: data?.review_count,
+      icon: MessageSquareIcon,
+    },
+    {
+      label: "Anbieter",
+      value: data?.business_profile_count,
+      icon: BriefcaseIcon,
+    },
     {
       label: "Zufriedenheit",
       value: data ? formatRating(data.average_rating) : undefined,

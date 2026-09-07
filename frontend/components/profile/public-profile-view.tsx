@@ -1,7 +1,6 @@
 "use client"
 
 import * as React from "react"
-import Link from "next/link"
 import { ClockIcon, MapPinIcon, PhoneIcon, StarIcon } from "lucide-react"
 
 import { EmptyState } from "@/components/empty-state"
@@ -9,6 +8,7 @@ import { OfferCard, OfferCardSkeleton } from "@/components/offers/offer-card"
 import { RatingStars } from "@/components/offers/rating-stars"
 import { ReviewDialog } from "@/components/reviews/review-dialog"
 import { ReviewList } from "@/components/reviews/review-list"
+import { LinkButton } from "@/components/ui/link-button"
 import { UserAvatar } from "@/components/user-avatar"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -38,12 +38,19 @@ export function PublicProfileView({ userId }: { userId: number }) {
   if (isError || !profile) {
     return (
       <div className="mx-auto w-full max-w-2xl px-4 py-16 sm:px-6">
-        <EmptyState title="Profil nicht gefunden" description={error?.message} />
+        <EmptyState
+          title="Profil nicht gefunden"
+          description={error?.message}
+        />
       </div>
     )
   }
 
-  const name = displayName(profile.first_name, profile.last_name, profile.username)
+  const name = displayName(
+    profile.first_name,
+    profile.last_name,
+    profile.username
+  )
   const isBusiness = profile.type === "business"
   const isOwnProfile = session?.userId === userId
   const canReview = session?.type === "customer" && isBusiness && !isOwnProfile
@@ -52,9 +59,14 @@ export function PublicProfileView({ userId }: { userId: number }) {
     <div className="mx-auto grid w-full max-w-4xl gap-10 px-4 py-10 sm:px-6">
       <header className="grid gap-5 rounded-xl border border-border bg-card p-6">
         <div className="flex flex-wrap items-start gap-5">
-          <UserAvatar name={name} src={profile.file} size="lg" className="size-20" />
+          <UserAvatar
+            name={name}
+            src={profile.file}
+            size="lg"
+            className="size-20"
+          />
 
-          <div className="min-w-0 flex-1 grid gap-1">
+          <div className="grid min-w-0 flex-1 gap-1">
             <h1 className="font-heading text-2xl font-bold">{name}</h1>
             <p className="text-sm text-muted-foreground">
               @{profile.username} · {PROFILE_TYPE_LABELS[profile.type]} · dabei
@@ -64,9 +76,9 @@ export function PublicProfileView({ userId }: { userId: number }) {
           </div>
 
           {isOwnProfile ? (
-            <Button variant="outline" size="md" render={<Link href="/profile" />}>
+            <LinkButton variant="outline" size="md" href="/profile">
               Profil bearbeiten
-            </Button>
+            </LinkButton>
           ) : canReview ? (
             <Button size="md" onClick={() => setIsReviewing(true)}>
               <StarIcon data-icon="inline-start" />
@@ -81,7 +93,9 @@ export function PublicProfileView({ userId }: { userId: number }) {
           </p>
         ) : null}
 
-        {isBusiness ? <ProviderFacts profile={profile} userId={userId} /> : null}
+        {isBusiness ? (
+          <ProviderFacts profile={profile} userId={userId} />
+        ) : null}
       </header>
 
       {isBusiness ? (

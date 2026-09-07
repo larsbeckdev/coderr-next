@@ -21,7 +21,9 @@ export function ThemeToggle() {
       type="button"
       variant="ghost"
       size="icon"
-      aria-label={isDark ? "Zum hellen Design wechseln" : "Zum dunklen Design wechseln"}
+      aria-label={
+        isDark ? "Zum hellen Design wechseln" : "Zum dunklen Design wechseln"
+      }
       onClick={() => setTheme(isDark ? "light" : "dark")}
     >
       {isHydrated && isDark ? <MoonIcon /> : <SunIcon />}

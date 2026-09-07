@@ -1,7 +1,6 @@
 "use client"
 
 import * as React from "react"
-import Link from "next/link"
 import { useRouter } from "next/navigation"
 import {
   CheckIcon,
@@ -24,6 +23,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
+import { LinkButton } from "@/components/ui/link-button"
 import { useCreateOrder } from "@/hooks/use-orders"
 import { ApiError } from "@/lib/api/client"
 import type { OfferPackage, OfferRetrieve } from "@/lib/api/types"
@@ -41,7 +41,8 @@ type OfferPackagesProps = {
 /** Cheapest first, whatever order the API returned the packages in. */
 function sortPackages(packages: OfferPackage[]): OfferPackage[] {
   return [...packages].sort(
-    (a, b) => OFFER_TYPES.indexOf(a.offer_type) - OFFER_TYPES.indexOf(b.offer_type)
+    (a, b) =>
+      OFFER_TYPES.indexOf(a.offer_type) - OFFER_TYPES.indexOf(b.offer_type)
   )
 }
 
@@ -71,7 +72,10 @@ export function OfferPackages({ offer, packages }: OfferPackagesProps) {
       setIsConfirming(false)
       toast.success("Auftrag erteilt", {
         description: `${selected.title} · ${formatPrice(selected.price)}`,
-        action: { label: "Zu den Aufträgen", onClick: () => router.push("/orders") },
+        action: {
+          label: "Zu den Aufträgen",
+          onClick: () => router.push("/orders"),
+        },
       })
     } catch (error) {
       const message =
@@ -113,7 +117,9 @@ export function OfferPackages({ offer, packages }: OfferPackagesProps) {
 
       <div className="grid gap-4 p-5">
         <div className="flex items-start justify-between gap-4">
-          <h2 className="font-heading text-lg font-semibold">{selected.title}</h2>
+          <h2 className="font-heading text-lg font-semibold">
+            {selected.title}
+          </h2>
           <p className="font-heading text-2xl font-bold whitespace-nowrap">
             {formatPrice(selected.price)}
           </p>
@@ -201,25 +207,25 @@ function OrderAction({
 }: OrderActionProps) {
   if (isOwner) {
     return (
-      <Button
+      <LinkButton
         size="xl"
         variant="outline"
         className="w-full"
-        render={<Link href={`/offers/${offerId}/edit`} />}
+        href={`/offers/${offerId}/edit`}
       >
         <PencilIcon data-icon="inline-start" />
         Angebot bearbeiten
-      </Button>
+      </LinkButton>
     )
   }
 
   if (!isSignedIn) {
     return (
       <div className="grid gap-2">
-        <Button size="xl" className="w-full" render={<Link href="/login" />}>
+        <LinkButton size="xl" className="w-full" href="/login">
           <LogInIcon data-icon="inline-start" />
           Anmelden und buchen
-        </Button>
+        </LinkButton>
         <p className="text-center text-xs text-muted-foreground">
           Buchen ist nur mit einem Kundenkonto möglich.
         </p>

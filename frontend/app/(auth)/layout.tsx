@@ -23,7 +23,11 @@ export default function AuthLayout({
               className="pointer-events-none object-cover opacity-20 mix-blend-luminosity"
             />
             <div className="relative">
-              <Logo href="/" width={148} className="[&_img]:brightness-0 [&_img]:invert" />
+              <Logo
+                href="/"
+                width={148}
+                className="[&_img]:brightness-0 [&_img]:invert"
+              />
             </div>
 
             <div className="relative my-auto max-w-md text-white">

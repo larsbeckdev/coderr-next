@@ -1,11 +1,10 @@
 "use client"
 
-import Link from "next/link"
 import { ExternalLinkIcon } from "lucide-react"
 
 import { EmptyState } from "@/components/empty-state"
 import { ProfileForm } from "@/components/profile/profile-form"
-import { Button } from "@/components/ui/button"
+import { LinkButton } from "@/components/ui/link-button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useOwnProfile } from "@/hooks/use-profiles"
 
@@ -23,14 +22,14 @@ export function OwnProfileView() {
         </div>
 
         {profile ? (
-          <Button
+          <LinkButton
             variant="outline"
             size="md"
-            render={<Link href={`/profile/${profile.user}`} />}
+            href={`/profile/${profile.user}`}
           >
             <ExternalLinkIcon data-icon="inline-start" />
             Öffentliche Ansicht
-          </Button>
+          </LinkButton>
         ) : null}
       </header>
 

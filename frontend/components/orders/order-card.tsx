@@ -12,7 +12,12 @@ import {
 import { UserAvatar } from "@/components/user-avatar"
 import { Button } from "@/components/ui/button"
 import type { Order, ProfileType } from "@/lib/api/types"
-import { formatDate, formatDeliveryTime, formatPrice, formatRevisions } from "@/lib/format"
+import {
+  formatDate,
+  formatDeliveryTime,
+  formatPrice,
+  formatRevisions,
+} from "@/lib/format"
 import { ORDER_STATUS_CLASSES, ORDER_STATUS_LABELS } from "@/lib/offer-meta"
 import { cn } from "@/lib/utils"
 
@@ -52,7 +57,9 @@ export function OrderCard({
     <li className="grid gap-4 rounded-xl border border-border bg-card p-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">
-          <h3 className="font-heading text-base font-semibold">{order.title}</h3>
+          <h3 className="font-heading text-base font-semibold">
+            {order.title}
+          </h3>
           <p className="text-xs text-muted-foreground">
             Beauftragt am {formatDate(order.created_at)} · Paket{" "}
             {order.offer_type}
@@ -74,7 +81,11 @@ export function OrderCard({
           href={`/profile/${counterpart.id}`}
           className="flex w-fit items-center gap-2 text-sm hover:text-primary"
         >
-          <UserAvatar name={counterpart.name} src={counterpart.file} size="sm" />
+          <UserAvatar
+            name={counterpart.name}
+            src={counterpart.file}
+            size="sm"
+          />
           <span>
             <span className="text-muted-foreground">
               {role === "customer" ? "Anbieter: " : "Kunde: "}

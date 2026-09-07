@@ -68,7 +68,9 @@ function ReviewCard({ review }: { review: Review }) {
   // Reviews carry the reviewer id only. The customer profile list is one
   // cached request and covers every reviewer on the page.
   const { data: customers } = useCustomerProfiles()
-  const reviewer = customers?.find((profile) => profile.user === review.reviewer)
+  const reviewer = customers?.find(
+    (profile) => profile.user === review.reviewer
+  )
   const name = reviewer
     ? displayName(reviewer.first_name, reviewer.last_name, reviewer.username)
     : "Kunde"

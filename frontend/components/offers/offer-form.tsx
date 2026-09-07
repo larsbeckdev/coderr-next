@@ -1,7 +1,6 @@
 "use client"
 
 import * as React from "react"
-import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -13,6 +12,7 @@ import { ImagePicker } from "@/components/forms/image-picker"
 import { OfferPackageFields } from "@/components/offers/offer-package-fields"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { LinkButton } from "@/components/ui/link-button"
 import { Textarea } from "@/components/ui/textarea"
 import { useCreateOffer, useUpdateOffer } from "@/hooks/use-offers"
 import { ApiError } from "@/lib/api/client"
@@ -123,8 +123,7 @@ export function OfferForm({
         <div>
           <h2 className="font-heading text-xl font-bold">Pakete</h2>
           <p className="text-sm text-muted-foreground">
-            Jedes Angebot braucht genau ein Basic-, Standard- und
-            Premium-Paket.
+            Jedes Angebot braucht genau ein Basic-, Standard- und Premium-Paket.
           </p>
         </div>
 
@@ -155,14 +154,14 @@ export function OfferForm({
               ? "Änderungen speichern"
               : "Angebot veröffentlichen"}
         </Button>
-        <Button
+        <LinkButton
           type="button"
           variant="ghost"
           size="xl"
-          render={<Link href={isEditing ? `/offers/${offerId}` : "/offers"} />}
+          href={isEditing ? `/offers/${offerId}` : "/offers"}
         >
           Abbrechen
-        </Button>
+        </LinkButton>
       </div>
     </form>
   )

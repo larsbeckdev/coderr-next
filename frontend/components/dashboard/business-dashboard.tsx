@@ -12,7 +12,7 @@ import {
 
 import { StatCard } from "@/components/dashboard/stat-card"
 import { EmptyState } from "@/components/empty-state"
-import { Button } from "@/components/ui/button"
+import { LinkButton } from "@/components/ui/link-button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useBusinessRatings } from "@/hooks/use-business-ratings"
 import { useOffers } from "@/hooks/use-offers"
@@ -30,7 +30,8 @@ export function BusinessDashboard({ session }: { session: Session }) {
   const { data: orders } = useOrders()
 
   const rating = ratings?.get(session.userId)
-  const openOrders = orders?.filter((order) => order.status === "in_progress") ?? []
+  const openOrders =
+    orders?.filter((order) => order.status === "in_progress") ?? []
 
   return (
     <div className="grid gap-10">
@@ -65,10 +66,10 @@ export function BusinessDashboard({ session }: { session: Session }) {
       <section className="grid gap-4">
         <div className="flex flex-wrap items-end justify-between gap-3">
           <h2 className="font-heading text-xl font-bold">Meine Angebote</h2>
-          <Button size="md" render={<Link href="/offers/new" />}>
+          <LinkButton size="md" href="/offers/new">
             <PlusIcon data-icon="inline-start" />
             Neues Angebot
-          </Button>
+          </LinkButton>
         </div>
 
         {offersPending ? (
@@ -82,9 +83,9 @@ export function BusinessDashboard({ session }: { session: Session }) {
             title="Noch kein Angebot veröffentlicht"
             description="Mit dem ersten Angebot wirst du in der Suche gefunden."
             action={
-              <Button size="md" render={<Link href="/offers/new" />}>
+              <LinkButton size="md" href="/offers/new">
                 Erstes Angebot anlegen
-              </Button>
+              </LinkButton>
             }
           />
         ) : (
@@ -115,14 +116,14 @@ export function BusinessDashboard({ session }: { session: Session }) {
                   </p>
                 </div>
 
-                <Button
+                <LinkButton
                   variant="outline"
                   size="md"
-                  render={<Link href={`/offers/${offer.id}/edit`} />}
+                  href={`/offers/${offer.id}/edit`}
                 >
                   <PencilIcon data-icon="inline-start" />
                   Bearbeiten
-                </Button>
+                </LinkButton>
               </li>
             ))}
           </ul>
@@ -132,9 +133,9 @@ export function BusinessDashboard({ session }: { session: Session }) {
       <section className="grid gap-4">
         <div className="flex flex-wrap items-end justify-between gap-3">
           <h2 className="font-heading text-xl font-bold">Offene Aufträge</h2>
-          <Button variant="ghost" size="md" render={<Link href="/orders" />}>
+          <LinkButton variant="ghost" size="md" href="/orders">
             Alle Aufträge
-          </Button>
+          </LinkButton>
         </div>
 
         {openOrders.length === 0 ? (
@@ -155,9 +156,9 @@ export function BusinessDashboard({ session }: { session: Session }) {
                     {formatPrice(order.price)}
                   </p>
                 </div>
-                <Button variant="outline" size="md" render={<Link href="/orders" />}>
+                <LinkButton variant="outline" size="md" href="/orders">
                   Status setzen
-                </Button>
+                </LinkButton>
               </li>
             ))}
           </ul>

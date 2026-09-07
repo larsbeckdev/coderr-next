@@ -1,7 +1,6 @@
 "use client"
 
 import * as React from "react"
-import Link from "next/link"
 import { toast } from "sonner"
 
 import { EmptyState } from "@/components/empty-state"
@@ -18,7 +17,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-import { Button } from "@/components/ui/button"
+import { LinkButton } from "@/components/ui/link-button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useOrders, useUpdateOrderStatus } from "@/hooks/use-orders"
 import { useBusinessProfiles, useCustomerProfiles } from "@/hooks/use-profiles"
@@ -46,7 +45,9 @@ export function OrdersView() {
 
   const [filter, setFilter] = React.useState<Filter>("all")
   const [pendingCancel, setPendingCancel] = React.useState<Order | null>(null)
-  const [reviewFor, setReviewFor] = React.useState<OrderCounterpart | null>(null)
+  const [reviewFor, setReviewFor] = React.useState<OrderCounterpart | null>(
+    null
+  )
 
   const counterparts = useCounterparts(role)
   // Only the customer's own reviews matter here, and one request covers every
@@ -78,7 +79,8 @@ export function OrdersView() {
   }
 
   const reviewForCounterpart = reviewFor
-    ? (ownReviews?.find((review) => review.business_user === reviewFor.id) ?? null)
+    ? (ownReviews?.find((review) => review.business_user === reviewFor.id) ??
+      null)
     : null
 
   return (
@@ -94,12 +96,17 @@ export function OrdersView() {
         </p>
       </header>
 
-      <div role="tablist" aria-label="Nach Status filtern" className="flex flex-wrap gap-2">
+      <div
+        role="tablist"
+        aria-label="Nach Status filtern"
+        className="flex flex-wrap gap-2"
+      >
         {FILTERS.map((entry) => {
           const count =
             entry.value === "all"
               ? (orders?.length ?? 0)
-              : (orders?.filter((order) => order.status === entry.value).length ?? 0)
+              : (orders?.filter((order) => order.status === entry.value)
+                  .length ?? 0)
           return (
             <button
               key={entry.value}
@@ -138,9 +145,9 @@ export function OrdersView() {
           }
           action={
             role === "customer" ? (
-              <Button variant="outline" size="md" render={<Link href="/offers" />}>
+              <LinkButton variant="outline" size="md" href="/offers">
                 Angebote durchsuchen
-              </Button>
+              </LinkButton>
             ) : null
           }
         />

@@ -1,10 +1,9 @@
-import Link from "next/link"
 import { CheckIcon } from "lucide-react"
 
 import { FeaturedOffers } from "@/components/landing/featured-offers"
 import { LandingHero } from "@/components/landing/hero"
 import { PlatformStats } from "@/components/landing/platform-stats"
-import { Button } from "@/components/ui/button"
+import { LinkButton } from "@/components/ui/link-button"
 
 const BENEFITS = [
   "Klare und transparente Preise. Bezahlung pro Projekt – du siehst Preis, Lieferzeit und Überarbeitungen, bevor du buchst.",
@@ -51,9 +50,9 @@ export default function LandingPage() {
             Lege ein Anbieterkonto an, veröffentliche dein erstes Angebot mit
             Basic-, Standard- und Premium-Paket und nimm Aufträge entgegen.
           </p>
-          <Button size="xl" render={<Link href="/register" />}>
+          <LinkButton size="xl" href="/register">
             Anbieter werden
-          </Button>
+          </LinkButton>
         </div>
       </section>
     </>

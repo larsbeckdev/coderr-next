@@ -91,12 +91,21 @@ export function ProfileForm({ profile }: { profile: Profile }) {
     }
   }
 
-  const name = displayName(profile.first_name, profile.last_name, profile.username)
+  const name = displayName(
+    profile.first_name,
+    profile.last_name,
+    profile.username
+  )
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-8">
       <section className="flex flex-wrap items-center gap-5 rounded-xl border border-border bg-card p-5">
-        <UserAvatar name={name} src={profile.file} size="lg" className="size-16" />
+        <UserAvatar
+          name={name}
+          src={profile.file}
+          size="lg"
+          className="size-16"
+        />
         <div className="grid gap-1">
           <p className="font-heading font-semibold">{name}</p>
           <p className="text-xs text-muted-foreground">
@@ -131,7 +140,11 @@ export function ProfileForm({ profile }: { profile: Profile }) {
           htmlFor="first_name"
           error={form.formState.errors.first_name?.message}
         >
-          <Input id="first_name" className="h-10 text-sm" {...form.register("first_name")} />
+          <Input
+            id="first_name"
+            className="h-10 text-sm"
+            {...form.register("first_name")}
+          />
         </Field>
 
         <Field
@@ -139,7 +152,11 @@ export function ProfileForm({ profile }: { profile: Profile }) {
           htmlFor="last_name"
           error={form.formState.errors.last_name?.message}
         >
-          <Input id="last_name" className="h-10 text-sm" {...form.register("last_name")} />
+          <Input
+            id="last_name"
+            className="h-10 text-sm"
+            {...form.register("last_name")}
+          />
         </Field>
 
         <Field
@@ -172,7 +189,12 @@ export function ProfileForm({ profile }: { profile: Profile }) {
             </Field>
 
             <Field label="Telefon" htmlFor="tel">
-              <Input id="tel" type="tel" className="h-10 text-sm" {...form.register("tel")} />
+              <Input
+                id="tel"
+                type="tel"
+                className="h-10 text-sm"
+                {...form.register("tel")}
+              />
             </Field>
 
             <Field
@@ -211,7 +233,9 @@ export function ProfileForm({ profile }: { profile: Profile }) {
           disabled={updateProfile.isPending || !form.formState.isDirty}
         >
           <SaveIcon data-icon="inline-start" />
-          {updateProfile.isPending ? "Wird gespeichert…" : "Änderungen speichern"}
+          {updateProfile.isPending
+            ? "Wird gespeichert…"
+            : "Änderungen speichern"}
         </Button>
       </div>
     </form>

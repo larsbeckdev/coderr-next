@@ -203,7 +203,9 @@ export function RegisterForm() {
         className="h-11 w-full"
       >
         <UserPlusIcon data-icon="inline-start" />
-        {form.formState.isSubmitting ? "Konto wird erstellt…" : "Konto erstellen"}
+        {form.formState.isSubmitting
+          ? "Konto wird erstellt…"
+          : "Konto erstellen"}
       </Button>
     </form>
   )

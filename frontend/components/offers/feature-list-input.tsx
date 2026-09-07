@@ -17,7 +17,11 @@ type FeatureListInputProps = {
  * one-value-per-entry shape visible, where a textarea would invite a comma
  * separated list that has to be guessed apart again.
  */
-export function FeatureListInput({ id, value, onChange }: FeatureListInputProps) {
+export function FeatureListInput({
+  id,
+  value,
+  onChange,
+}: FeatureListInputProps) {
   const [draft, setDraft] = React.useState("")
 
   function add() {

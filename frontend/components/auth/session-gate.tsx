@@ -45,7 +45,10 @@ export function SessionGate({
 
   if (!isHydrated || !isAllowed) {
     return (
-      <div className="flex min-h-dvh items-center justify-center" aria-busy="true">
+      <div
+        className="flex min-h-dvh items-center justify-center"
+        aria-busy="true"
+      >
         <Loader2Icon className="size-6 animate-spin text-primary" />
         <span className="sr-only">Wird geladen</span>
       </div>

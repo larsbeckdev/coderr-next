@@ -44,7 +44,9 @@ export function ReviewDialog({
   const createReview = useCreateReview()
   const updateReview = useUpdateReview()
   const [rating, setRating] = React.useState(review?.rating ?? 5)
-  const [description, setDescription] = React.useState(review?.description ?? "")
+  const [description, setDescription] = React.useState(
+    review?.description ?? ""
+  )
   const [error, setError] = React.useState<string | null>(null)
 
   const isPending = createReview.isPending || updateReview.isPending

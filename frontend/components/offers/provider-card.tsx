@@ -1,11 +1,15 @@
 "use client"
 
-import Link from "next/link"
-import { ClockIcon, MapPinIcon, PackageCheckIcon, PhoneIcon } from "lucide-react"
+import {
+  ClockIcon,
+  MapPinIcon,
+  PackageCheckIcon,
+  PhoneIcon,
+} from "lucide-react"
 
 import { RatingStars } from "@/components/offers/rating-stars"
+import { LinkButton } from "@/components/ui/link-button"
 import { UserAvatar } from "@/components/user-avatar"
-import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useBusinessRatings } from "@/hooks/use-business-ratings"
 import { useOrderCounts } from "@/hooks/use-orders"
@@ -39,7 +43,11 @@ export function ProviderCard({ userId }: { userId: number }) {
     return null
   }
 
-  const name = displayName(profile.first_name, profile.last_name, profile.username)
+  const name = displayName(
+    profile.first_name,
+    profile.last_name,
+    profile.username
+  )
 
   return (
     <aside className="grid gap-4 rounded-xl border border-border bg-card p-5">
@@ -71,7 +79,11 @@ export function ProviderCard({ userId }: { userId: number }) {
 
       <dl className="grid gap-2 border-t border-border pt-4 text-sm">
         {profile.location ? (
-          <ProviderFact icon={MapPinIcon} label="Ort" value={profile.location} />
+          <ProviderFact
+            icon={MapPinIcon}
+            label="Ort"
+            value={profile.location}
+          />
         ) : null}
         {profile.working_hours ? (
           <ProviderFact
@@ -92,14 +104,14 @@ export function ProviderCard({ userId }: { userId: number }) {
         ) : null}
       </dl>
 
-      <Button
+      <LinkButton
         variant="outline"
         size="md"
         className="w-full"
-        render={<Link href={`/profile/${userId}`} />}
+        href={`/profile/${userId}`}
       >
         Profil ansehen
-      </Button>
+      </LinkButton>
     </aside>
   )
 }
@@ -115,7 +127,10 @@ function ProviderFact({
 }) {
   return (
     <div className="flex items-start gap-2">
-      <Icon className="mt-0.5 size-4 shrink-0 text-muted-foreground" aria-hidden />
+      <Icon
+        className="mt-0.5 size-4 shrink-0 text-muted-foreground"
+        aria-hidden
+      />
       <dt className="sr-only">{label}</dt>
       <dd className="text-muted-foreground">{value}</dd>
     </div>

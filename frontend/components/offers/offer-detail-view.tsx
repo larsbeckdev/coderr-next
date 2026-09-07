@@ -1,13 +1,12 @@
 "use client"
 
-import Link from "next/link"
 import { ChevronLeftIcon } from "lucide-react"
 
 import { EmptyState } from "@/components/empty-state"
 import { OfferPackages } from "@/components/offers/offer-packages"
 import { ProviderCard } from "@/components/offers/provider-card"
 import { ReviewList } from "@/components/reviews/review-list"
-import { Button } from "@/components/ui/button"
+import { LinkButton } from "@/components/ui/link-button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useOffer } from "@/hooks/use-offers"
 import { formatDate } from "@/lib/format"
@@ -36,9 +35,9 @@ export function OfferDetailView({ offerId }: { offerId: number }) {
           title="Angebot nicht gefunden"
           description={error?.message}
           action={
-            <Button variant="outline" size="md" render={<Link href="/offers" />}>
+            <LinkButton variant="outline" size="md" href="/offers">
               Zurück zu den Angeboten
-            </Button>
+            </LinkButton>
           }
         />
       </div>
@@ -49,10 +48,10 @@ export function OfferDetailView({ offerId }: { offerId: number }) {
 
   return (
     <div className="mx-auto w-full max-w-[1440px] px-4 py-8 sm:px-6">
-      <Button variant="ghost" size="md" render={<Link href="/offers" />}>
+      <LinkButton variant="ghost" size="md" href="/offers">
         <ChevronLeftIcon data-icon="inline-start" />
         Alle Angebote
-      </Button>
+      </LinkButton>
 
       <div className="mt-6 grid gap-10 lg:grid-cols-[minmax(0,1fr)_380px] lg:items-start">
         <div className="grid gap-8">

@@ -1,12 +1,11 @@
 "use client"
 
-import Link from "next/link"
 import { ClockIcon, PackageCheckIcon, SearchIcon, StarIcon } from "lucide-react"
 
 import { StatCard } from "@/components/dashboard/stat-card"
 import { EmptyState } from "@/components/empty-state"
 import { OfferCard, OfferCardSkeleton } from "@/components/offers/offer-card"
-import { Button } from "@/components/ui/button"
+import { LinkButton } from "@/components/ui/link-button"
 import { useOffers } from "@/hooks/use-offers"
 import { useOrders } from "@/hooks/use-orders"
 import { useReviews } from "@/hooks/use-reviews"
@@ -49,9 +48,9 @@ export function CustomerDashboard({ session }: { session: Session }) {
       <section className="grid gap-4">
         <div className="flex flex-wrap items-end justify-between gap-3">
           <h2 className="font-heading text-xl font-bold">Zuletzt beauftragt</h2>
-          <Button variant="ghost" size="md" render={<Link href="/orders" />}>
+          <LinkButton variant="ghost" size="md" href="/orders">
             Alle Aufträge
-          </Button>
+          </LinkButton>
         </div>
 
         {ordersPending ? null : !orders || orders.length === 0 ? (
@@ -59,10 +58,10 @@ export function CustomerDashboard({ session }: { session: Session }) {
             title="Noch nichts beauftragt"
             description="Such dir ein Paket aus – Preis und Lieferzeit stehen vorher fest."
             action={
-              <Button size="md" render={<Link href="/offers" />}>
+              <LinkButton size="md" href="/offers">
                 <SearchIcon data-icon="inline-start" />
                 Angebote durchsuchen
-              </Button>
+              </LinkButton>
             }
           />
         ) : (

@@ -12,7 +12,11 @@ type RatingStarsProps = {
  * Five outlined stars with a clipped overlay on top, so a 3.4 shows as 3.4
  * rather than rounding to a whole star.
  */
-export function RatingStars({ value, size = "sm", className }: RatingStarsProps) {
+export function RatingStars({
+  value,
+  size = "sm",
+  className,
+}: RatingStarsProps) {
   const clamped = Math.min(5, Math.max(0, value))
   // shrink-0 matters on the clipped overlay: its container is narrower than
   // its content, and flex would otherwise squeeze the stars instead of

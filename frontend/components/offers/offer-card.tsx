@@ -54,7 +54,9 @@ export function OfferCard({ offer }: { offer: Offer }) {
         {rating ? (
           <div className="flex items-center gap-1.5 text-xs">
             <RatingStars value={rating.average} />
-            <span className="font-semibold">{formatRating(rating.average)}</span>
+            <span className="font-semibold">
+              {formatRating(rating.average)}
+            </span>
             <span className="text-muted-foreground">({rating.count})</span>
           </div>
         ) : null}

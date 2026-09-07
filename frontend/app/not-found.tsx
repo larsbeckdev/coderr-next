@@ -1,8 +1,7 @@
 import Image from "next/image"
-import Link from "next/link"
 
 import { Logo } from "@/components/brand/logo"
-import { Button } from "@/components/ui/button"
+import { LinkButton } from "@/components/ui/link-button"
 
 export default function NotFound() {
   return (
@@ -21,9 +20,9 @@ export default function NotFound() {
         Diese Seite gibt es nicht. Vielleicht wurde das Angebot inzwischen
         entfernt.
       </p>
-      <Button size="lg" className="h-10" render={<Link href="/offers" />}>
+      <LinkButton size="lg" className="h-10" href="/offers">
         Zu den Angeboten
-      </Button>
+      </LinkButton>
     </div>
   )
 }

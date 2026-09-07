@@ -9,11 +9,31 @@ const dmSans = localFont({
   variable: "--font-dm-sans",
   display: "swap",
   src: [
-    { path: "./fonts/dm-sans-v15-latin-regular.woff2", weight: "400", style: "normal" },
-    { path: "./fonts/dm-sans-v15-latin-500.woff2", weight: "500", style: "normal" },
-    { path: "./fonts/dm-sans-v15-latin-600.woff2", weight: "600", style: "normal" },
-    { path: "./fonts/dm-sans-v15-latin-700.woff2", weight: "700", style: "normal" },
-    { path: "./fonts/dm-sans-v15-latin-800.woff2", weight: "800", style: "normal" },
+    {
+      path: "./fonts/dm-sans-v15-latin-regular.woff2",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "./fonts/dm-sans-v15-latin-500.woff2",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "./fonts/dm-sans-v15-latin-600.woff2",
+      weight: "600",
+      style: "normal",
+    },
+    {
+      path: "./fonts/dm-sans-v15-latin-700.woff2",
+      weight: "700",
+      style: "normal",
+    },
+    {
+      path: "./fonts/dm-sans-v15-latin-800.woff2",
+      weight: "800",
+      style: "normal",
+    },
   ],
 })
 
@@ -35,7 +55,7 @@ export default function RootLayout({
     <html
       lang="de"
       suppressHydrationWarning
-      className={cn("antialiased font-sans", dmSans.variable)}
+      className={cn("font-sans antialiased", dmSans.variable)}
     >
       <body className="min-h-dvh">
         <AppProviders>{children}</AppProviders>

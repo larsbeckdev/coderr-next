@@ -7,7 +7,12 @@ import { SearchIcon } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 
-const FACES = ["/img/person-1.png", "/img/person-2.png", "/img/person-3.png", "/img/person-4.png"]
+const FACES = [
+  "/img/person-1.png",
+  "/img/person-2.png",
+  "/img/person-3.png",
+  "/img/person-4.png",
+]
 
 const SUGGESTIONS = ["Frontend", "Django", "API", "Datenbank", "UI Design"]
 
@@ -17,7 +22,9 @@ export function LandingHero() {
 
   function search(term: string) {
     const trimmed = term.trim()
-    router.push(trimmed ? `/offers?search=${encodeURIComponent(trimmed)}` : "/offers")
+    router.push(
+      trimmed ? `/offers?search=${encodeURIComponent(trimmed)}` : "/offers"
+    )
   }
 
   return (
@@ -80,10 +87,7 @@ export function LandingHero() {
           </div>
         </div>
 
-        <div
-          aria-hidden
-          className="hidden shrink-0 grid-cols-2 gap-4 lg:grid"
-        >
+        <div aria-hidden className="hidden shrink-0 grid-cols-2 gap-4 lg:grid">
           {FACES.map((face, index) => (
             <Image
               key={face}

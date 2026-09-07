@@ -96,7 +96,12 @@ export function LoginForm() {
           />
         </Field>
 
-        <Button type="submit" size="lg" disabled={isBusy} className="h-11 w-full">
+        <Button
+          type="submit"
+          size="lg"
+          disabled={isBusy}
+          className="h-11 w-full"
+        >
           <LogInIcon data-icon="inline-start" />
           {form.formState.isSubmitting ? "Anmelden…" : "Anmelden"}
         </Button>

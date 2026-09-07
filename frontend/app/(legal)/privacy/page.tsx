@@ -38,8 +38,9 @@ export default function PrivacyPage() {
         <h2 className="font-heading text-lg font-semibold">Sichtbarkeit</h2>
         <p className="text-sm leading-relaxed text-muted-foreground">
           Angebote sind öffentlich sichtbar. Profile, Aufträge und Bewertungen
-          sind nur für angemeldete Nutzer sichtbar. Aufträge sieht ausschließlich
-          das Kundenkonto und das Anbieterkonto, die daran beteiligt sind.
+          sind nur für angemeldete Nutzer sichtbar. Aufträge sieht
+          ausschließlich das Kundenkonto und das Anbieterkonto, die daran
+          beteiligt sind.
         </p>
       </section>
 
