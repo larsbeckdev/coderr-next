@@ -5,16 +5,32 @@ from auth_app.models import Profile
 
 GUEST_USERS = [
     {
-        'username': 'andrey',
-        'password': 'asdasd',
-        'email': 'andrey@example.com',
+        'username': 'mila',
+        'password': 'demo1234',
+        'email': 'mila@example.com',
+        'first_name': 'Mila',
+        'last_name': 'Hartmann',
         'type': Profile.ProfileType.CUSTOMER,
+        'profile': {},
     },
     {
-        'username': 'kevin',
-        'password': 'asdasd24',
-        'email': 'kevin@example.com',
+        'username': 'jonas',
+        'password': 'demo1234',
+        'email': 'jonas@example.com',
+        'first_name': 'Jonas',
+        'last_name': 'Reinhardt',
         'type': Profile.ProfileType.BUSINESS,
+        # A business profile with empty fields makes the provider card on
+        # every offer look broken, so the demo account arrives filled in.
+        'profile': {
+            'location': 'Leipzig',
+            'tel': '+49 341 5550123',
+            'working_hours': 'Mo-Fr, 9-17 Uhr',
+            'description': (
+                'Freelance-Entwickler für Web-Anwendungen. Schwerpunkt '
+                'Django im Backend und React im Frontend.'
+            ),
+        },
     },
 ]
 
@@ -39,6 +55,9 @@ class Command(BaseCommand):
             username=guest['username'],
             email=guest['email'],
             password=guest['password'],
+            first_name=guest['first_name'],
+            last_name=guest['last_name'],
         )
-        Profile.objects.create(user=user, type=guest['type'])
+        Profile.objects.create(
+            user=user, type=guest['type'], **guest['profile'])
         return True

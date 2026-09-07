@@ -62,20 +62,20 @@ class LoginTests(APITestCase):
 
     def setUp(self):
         self.url = reverse('login')
-        create_user_with_profile('kevin', Profile.ProfileType.BUSINESS)
+        create_user_with_profile('jonas', Profile.ProfileType.BUSINESS)
 
     def test_login_returns_token(self):
         response = self.client.post(
-            self.url, {'username': 'kevin', 'password': 'pw12345'},
+            self.url, {'username': 'jonas', 'password': 'pw12345'},
             format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['username'], 'kevin')
+        self.assertEqual(response.data['username'], 'jonas')
         self.assertTrue(Token.objects.filter(key=response.data['token'])
                         .exists())
 
     def test_login_fails_with_wrong_password(self):
         response = self.client.post(
-            self.url, {'username': 'kevin', 'password': 'wrong'},
+            self.url, {'username': 'jonas', 'password': 'wrong'},
             format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
@@ -169,6 +169,6 @@ class GuestUserCommandTests(APITestCase):
         call_command('create_guest_users', stdout=StringIO())
         call_command('create_guest_users', stdout=StringIO())
         self.assertEqual(User.objects.filter(
-            username__in=['andrey', 'kevin']).count(), 2)
+            username__in=['mila', 'jonas']).count(), 2)
         self.assertEqual(
-            Profile.objects.get(user__username='kevin').type, 'business')
+            Profile.objects.get(user__username='jonas').type, 'business')
