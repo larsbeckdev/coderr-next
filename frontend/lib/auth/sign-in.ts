@@ -44,13 +44,13 @@ export async function signUp(payload: RegistrationPayload): Promise<Session> {
  */
 export const GUEST_ACCOUNTS = [
   {
-    label: "Als Kunde testen",
-    username: "andrey",
-    password: "asdasd",
+    label: "Als Kundin testen",
+    username: "mila",
+    password: "demo1234",
   },
   {
     label: "Als Anbieter testen",
-    username: "kevin",
-    password: "asdasd24",
+    username: "jonas",
+    password: "demo1234",
   },
 ] as const

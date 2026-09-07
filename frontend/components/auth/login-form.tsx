@@ -75,7 +75,7 @@ export function LoginForm() {
           <Input
             id="username"
             autoComplete="username"
-            placeholder="z. B. andrey"
+            placeholder="z. B. mila"
             className="h-10 text-sm"
             aria-invalid={Boolean(form.formState.errors.username)}
             {...form.register("username")}
