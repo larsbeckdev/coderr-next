@@ -67,8 +67,8 @@ python manage.py create_guest_users
 
 | Account | Username | Password | Type |
 | --- | --- | --- | --- |
-| Guest customer | `andrey` | `asdasd` | customer |
-| Guest business | `kevin` | `asdasd24` | business |
+| Guest customer | `mila` | `demo1234` | customer |
+| Guest business | `jonas` | `demo1234` | business |
 
 The command is idempotent and skips accounts that already exist.
 

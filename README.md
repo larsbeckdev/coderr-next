@@ -55,7 +55,7 @@ All of it lives in `.env`, see [.env.example](.env.example) for the full list wi
 docker compose run --rm api python manage.py create_guest_users
 ```
 
-Creates the customer account `andrey` and the business account `kevin`. The login page offers both as one-click buttons, so the two sides of the marketplace can be tried without signing up.
+Creates the customer account `mila` and the business account `jonas`, both with the password `demo1234`. The login page offers them as one-click buttons, so the two sides of the marketplace can be tried without signing up.
 
 ### Admin user
 
