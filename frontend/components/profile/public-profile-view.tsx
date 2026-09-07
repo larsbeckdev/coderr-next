@@ -24,6 +24,14 @@ import { PROFILE_TYPE_LABELS } from "@/lib/offer-meta"
 export function PublicProfileView({ userId }: { userId: number }) {
   const session = useSession()
   const { data: profile, isPending, isError, error } = useProfile(userId)
+  // Loaded up here so the button can say whether it opens a new review or an
+  // existing one, and so the dialog edits instead of hitting the
+  // one-review-per-provider constraint.
+  const { data: ownReviews } = useReviews(
+    session?.type === "customer"
+      ? { reviewer_id: session.userId, business_user_id: userId }
+      : {}
+  )
   const [isReviewing, setIsReviewing] = React.useState(false)
 
   if (isPending) {
@@ -54,6 +62,7 @@ export function PublicProfileView({ userId }: { userId: number }) {
   const isBusiness = profile.type === "business"
   const isOwnProfile = session?.userId === userId
   const canReview = session?.type === "customer" && isBusiness && !isOwnProfile
+  const ownReview = ownReviews?.[0] ?? null
 
   return (
     <div className="mx-auto grid w-full max-w-4xl gap-10 px-4 py-10 sm:px-6">
@@ -80,9 +89,13 @@ export function PublicProfileView({ userId }: { userId: number }) {
               Profil bearbeiten
             </LinkButton>
           ) : canReview ? (
-            <Button size="md" onClick={() => setIsReviewing(true)}>
+            <Button
+              size="md"
+              variant={ownReview ? "outline" : "default"}
+              onClick={() => setIsReviewing(true)}
+            >
               <StarIcon data-icon="inline-start" />
-              Bewerten
+              {ownReview ? "Bewertung bearbeiten" : "Bewerten"}
             </Button>
           ) : null}
         </div>
@@ -106,10 +119,12 @@ export function PublicProfileView({ userId }: { userId: number }) {
       ) : null}
 
       {canReview && isReviewing ? (
-        <ReviewDialogForProvider
+        <ReviewDialog
+          open
           onOpenChange={setIsReviewing}
-          userId={userId}
-          name={name}
+          businessUserId={userId}
+          businessUserName={name}
+          review={ownReview}
         />
       ) : null}
     </div>
@@ -209,34 +224,5 @@ function ProviderOffers({ userId, name }: { userId: number; name: string }) {
         </div>
       )}
     </section>
-  )
-}
-
-/**
- * Loads the review this customer may already have written, so the dialog
- * edits it instead of running into the one-review-per-provider constraint.
- */
-function ReviewDialogForProvider({
-  onOpenChange,
-  userId,
-  name,
-}: {
-  onOpenChange: (open: boolean) => void
-  userId: number
-  name: string
-}) {
-  const session = useSession()
-  const { data: ownReviews } = useReviews(
-    session ? { reviewer_id: session.userId, business_user_id: userId } : {}
-  )
-
-  return (
-    <ReviewDialog
-      open
-      onOpenChange={onOpenChange}
-      businessUserId={userId}
-      businessUserName={name}
-      review={ownReviews?.[0] ?? null}
-    />
   )
 }
