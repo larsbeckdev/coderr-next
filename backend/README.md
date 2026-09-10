@@ -4,8 +4,9 @@ REST API for the Coderr freelancer marketplace, built with Django and the
 Django REST Framework. Business users publish offers with three packages,
 customers order those packages and rate the business users afterwards.
 
-This repository contains the backend only. The matching frontend is a separate
-static project.
+This is the backend half of the repository. The matching Next.js frontend lives
+in [../frontend/](../frontend/), and [../README.md](../README.md) describes the
+Docker Compose stack that runs both together.
 
 ## Requirements
 
@@ -16,7 +17,7 @@ static project.
 
 ```bash
 git clone <repository-url>
-cd coderr-backend
+cd coderr-next/backend
 
 python -m venv env
 # Windows
@@ -74,11 +75,11 @@ The command is idempotent and skips accounts that already exist.
 
 ## Frontend connection
 
-Serve the frontend with any static server, for example the VS Code Live Server
-extension, and open it while this backend is running. The frontend builds its
-API base URL from the host it was loaded from and appends port `8000`
-(`shared/scripts/config.js`), so opening the page on `127.0.0.1` talks to
-`127.0.0.1:8000` and opening it on a LAN address talks to that same address.
+Start the frontend with `npm run dev` in [../frontend/](../frontend/) while this
+backend is running. It builds its API base URL from the host it was loaded from
+and appends port `8000` (`lib/api/client.ts`), so opening the page on
+`127.0.0.1` talks to `127.0.0.1:8000` and opening it on a LAN address talks to
+that same address.
 
 Add the frontend origin to `DJANGO_CORS_ALLOWED_ORIGINS` if you disable
 `DJANGO_CORS_ALLOW_ALL_ORIGINS`.
@@ -102,9 +103,9 @@ DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,192.168.0.42
 ```
 
 Then open the frontend through the same address, for example
-`http://192.168.0.42:5500/frontend/index.html`. Do not mix the two: a page
-served from a LAN address while the API is addressed as `127.0.0.1` is blocked
-by the browser, because a public origin may not call loopback.
+`http://192.168.0.42:3000`. Do not mix the two: a page served from a LAN
+address while the API is addressed as `127.0.0.1` is blocked by the browser,
+because a public origin may not call loopback.
 
 Windows may additionally ask to allow Python through the firewall the first
 time an external device connects.
