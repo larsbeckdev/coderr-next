@@ -1,3 +1,6 @@
+from io import StringIO
+
+from django.core.management import call_command
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
@@ -5,6 +8,7 @@ from rest_framework.test import APITestCase
 from auth_app.models import Profile
 from auth_app.tests import create_user_with_profile
 
+from .management.commands.create_demo_offers import DEMO_OFFERS
 from .models import Offer, OfferDetail
 
 
@@ -283,3 +287,29 @@ class OfferModelTests(APITestCase):
     def test_offer_detail_str_contains_offer_and_type(self):
         detail = self.offer.details.get(offer_type='basic')
         self.assertEqual(str(detail), 'Website Design - basic')
+
+
+class DemoOfferCommandTests(APITestCase):
+    """Tests for the demo offer management command."""
+
+    def setUp(self):
+        self.business, _ = create_user_with_profile(
+            'seedbiz', Profile.ProfileType.BUSINESS)
+
+    def test_command_creates_every_offer_once(self):
+        call_command('create_demo_offers', stdout=StringIO())
+        call_command('create_demo_offers', stdout=StringIO())
+        self.assertEqual(Offer.objects.count(), len(DEMO_OFFERS))
+
+    def test_every_offer_gets_the_three_required_packages(self):
+        call_command('create_demo_offers', stdout=StringIO())
+        for offer in Offer.objects.all():
+            types = sorted(offer.details.values_list('offer_type', flat=True))
+            self.assertEqual(types, ['basic', 'premium', 'standard'])
+
+    def test_command_reports_when_no_business_account_exists(self):
+        Profile.objects.filter(user=self.business).delete()
+        stderr = StringIO()
+        call_command('create_demo_offers', stderr=stderr)
+        self.assertEqual(Offer.objects.count(), 0)
+        self.assertIn('create_guest_users', stderr.getvalue())
