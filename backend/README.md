@@ -73,6 +73,21 @@ python manage.py create_guest_users
 
 The command is idempotent and skips accounts that already exist.
 
+### Demo offers
+
+An empty marketplace hides most of the frontend, so there is a second command
+for the offer catalogue:
+
+```bash
+python manage.py create_demo_offers
+```
+
+It creates eight offers with their basic, standard and premium package and
+spreads them across every existing business account. Prices range from 250 to
+6500 and delivery times from 2 to 45 days, so `min_price`, `max_delivery_time`
+and the pagination all have something to filter. The command is idempotent as
+well and skips offers whose title the owner already has.
+
 ## Frontend connection
 
 Start the frontend with `npm run dev` in [../frontend/](../frontend/) while this

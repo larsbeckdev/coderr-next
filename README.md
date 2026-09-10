@@ -57,6 +57,14 @@ docker compose run --rm api python manage.py create_guest_users
 
 Creates the customer account `mila` and the business account `jonas`, both with the password `demo1234`. The login page offers them as one-click buttons, so the two sides of the marketplace can be tried without signing up.
 
+### Demo offers
+
+```bash
+docker compose run --rm api python manage.py create_demo_offers
+```
+
+Fills the marketplace with eight offers spread across the existing business accounts, so the list, its filters and the pagination have something to work on. Run `create_guest_users` first, otherwise there is no business account to own them.
+
 ### Admin user
 
 ```bash
